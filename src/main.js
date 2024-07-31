@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(fas, far, fab)
 
 /* import mongoDB pass */
-import { mongodbUri } from './js/viariables'
+import { mongodbUri } from './js/variables'
 
 const app = createApp(App)
 
