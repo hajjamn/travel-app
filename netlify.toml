@@ -1,7 +1,7 @@
 [build]
   command = "npm run build" # or "yarn build" if you are using yarn
   publish = "dist" # The directory where the build output is placed
-  functions = "functions" # Directory for Netlify Functions if you have any
+  functions = "netlify/functions" # Directory for Netlify Functions if you have any
 
 [dev]
   command = "npm run dev" # or "yarn dev"

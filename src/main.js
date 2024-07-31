@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 
 import App from './App.vue'
+import axiosPlugin from './plugins/axios';
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -25,5 +26,7 @@ const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)
 
 app.provide('mongodbUri', mongodbUri)
+
+app.use(axiosPlugin);
 
 app.mount('#app')
