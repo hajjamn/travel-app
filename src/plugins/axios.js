@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: '/netlify/functions/', //L'url di base da cui fare le chiamate
+  baseURL: '/.netlify/functions/', //L'url di base da cui fare le chiamate
 });
 
 axiosInstance.interceptors.request.use(
