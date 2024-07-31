@@ -10,11 +10,15 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 
 
 
+
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* add icons to the library */
 library.add(fas, far, fab)
+
+/* import mongoDB pass */
+import { mongodbUri } from './js/viariables'
 
 const app = createApp(App)
 

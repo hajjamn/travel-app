@@ -19,6 +19,7 @@ export default {
         <div class="row aling-items-center flex-column justify-content-center h-100">
           <div class="col-auto text-center">
             <h1>Hello Vue <font-awesome-icon :icon="['fab', 'vuejs']" /></h1>
+            <button class="btn btn-primary" @click="console.log(mongodbUri)"></button>
           </div>
         </div>
       </div>

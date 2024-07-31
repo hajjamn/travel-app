@@ -17,6 +17,7 @@
     "@popperjs/core": "^2.11.8",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "mongodb": "^6.8.0",
     "vue": "^3.4.21",
     "vue-axios": "^3.5.2"
   },
