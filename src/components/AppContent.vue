@@ -1,7 +1,6 @@
 <script>
 export default {
   name: 'AppContent',
-  inject: ['mongodbUri'],
   data() {
     return {
       responseData: Object
@@ -12,7 +11,6 @@ export default {
       this.$axios.get('/hello')
         .then((response) => {
           console.log(response.data);
-          console.log(this.mongodbUri)
         })
         .catch((error) => {
           console.log(error);

@@ -18,14 +18,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* add icons to the library */
 library.add(fas, far, fab)
 
-/* import mongoDB pass */
-import { mongodbUri } from './js/variables'
-
 const app = createApp(App)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
-
-app.provide('mongodbUri', mongodbUri)
 
 app.use(axiosPlugin);
 
