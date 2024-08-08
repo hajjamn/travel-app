@@ -1,10 +1,10 @@
 [build]
-  command = "npm run build" # or "yarn build" if you are using yarn
-  publish = "dist" # The directory where the build output is placed
-  functions = "netlify/functions" # Directory for Netlify Functions if you have any
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
 
 [dev]
-  command = "npm run dev" # or "yarn dev"
+  command = "npm run dev"
   port = 8888
   targetPort = 5173
 
