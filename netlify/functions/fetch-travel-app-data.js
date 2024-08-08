@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+import { MongoClient } from "mongodb";
 
 const mongoClient = new MongoClient(process.env.MONGODB_URI);
 
