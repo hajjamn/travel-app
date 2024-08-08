@@ -1,4 +1,5 @@
-import { mongodbUri } from '../../src/js/variables';
+require('dotenv').config()
+const dotenvUri = process.env.VITE_MONGODB_URI
 
 const { MongoClient } = require('mongodb')
 
@@ -7,7 +8,7 @@ const { MongoClient } = require('mongodb')
 const handler = async function (event, context) {
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: "Hello World", uri: mongodbUri }),
+    body: JSON.stringify({ message: "Hello World", uri: dotenvUri }),
   };
 };
 
