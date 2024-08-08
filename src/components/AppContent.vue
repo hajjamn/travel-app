@@ -9,7 +9,7 @@ export default {
   },
   methods: {
     test() {
-      this.$axios.get('/hello/hello')
+      this.$axios.get('/hello')
         .then((response) => {
           console.log(response.data)
         })
