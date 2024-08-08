@@ -9,6 +9,6 @@
   targetPort = 5173
 
 [[redirects]]
-  from = "/hello"
-  to = "/.netlify/functions/hello"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
