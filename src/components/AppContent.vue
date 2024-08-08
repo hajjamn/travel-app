@@ -11,7 +11,8 @@ export default {
     test() {
       this.$axios.get('/hello')
         .then((response) => {
-          console.log(response.data)
+          console.log(response.data);
+          console.log(this.mongodbUri)
         })
         .catch((error) => {
           console.log(error);
