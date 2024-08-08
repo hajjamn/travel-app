@@ -8,13 +8,21 @@ export default {
   },
   methods: {
     test() {
-      this.$axios.get('/hello')
+      this.$axios.get('/fetch-travel-app-data')
         .then((response) => {
           console.log(response.data);
         })
         .catch((error) => {
           console.log(error);
         });
+
+      /* this.$axios.get('/hello')
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      }); */
     }
   }
 }
