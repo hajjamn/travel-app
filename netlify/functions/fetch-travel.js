@@ -8,7 +8,7 @@ dotenv.config();
 const mongodbUri = process.env.MONGODB_URI;
 const mongoClient = new MongoClient(mongodbUri);
 
-//Sinceramente non ho capito bene cosa fa qui
+//Connessione al server
 const clientPromise = mongoClient.connect();
 
 const handler = async function (event, context) {
@@ -28,7 +28,7 @@ const handler = async function (event, context) {
 
     //Adesso recuperiamo anche tutti i giorni dalla collection days che hanno a travel_id l'id della query
     const daysCollection = database.collection("days");
-    const days = await daysCollection.find({ 'travel_id': query }).toArray();
+    const days = await daysCollection.find({ "travel_id": query }).toArray();
 
     // Log successful database connection and query
     console.log("Successfully connected to database and retrieved results");
@@ -38,7 +38,7 @@ const handler = async function (event, context) {
       body: JSON.stringify({
         data: {
           travel,
-          days
+          days,
         },
       }),
     };
