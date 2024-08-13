@@ -16,7 +16,7 @@ export default {
   <footer>
     <section class="bg-dark">
       <div class="container py-5 text-center text-white">
-        <h1>FOOTER</h1>
+        <button class="btn btn-warning" @click="test">Test</button>
       </div>
     </section>
   </footer>
