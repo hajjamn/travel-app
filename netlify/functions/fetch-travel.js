@@ -18,18 +18,15 @@ const handler = async function (event, context) {
     const database = (await clientPromise).db("travel-app");
 
     //Estraiamo i parametri dall'evento. In netlify si fa cosi
-
-
     const collection = event.queryStringParameters.collection;
     const query = event.queryStringParameters.query;
-    /* const query = 'travel1'
-    const collection = 'travels' */
 
     //Ci colleghiamo a quella collection
     const queryCollection = database.collection(collection);
 
     const travel = await queryCollection.find({ _id: query }).toArray();
 
+    //Adesso recuperiamo anche tutti i giorni dalla collection days che hanno a travel_id l'id della query
     const daysCollection = database.collection("days");
     const days = await daysCollection.find({ 'travel_id': query }).toArray();
 
