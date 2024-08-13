@@ -11,16 +11,27 @@ const mongoClient = new MongoClient(mongodbUri);
 //Sinceramente non ho capito bene cosa fa qui
 const clientPromise = mongoClient.connect();
 
-const handler = async function (event, context, collection, query) {
+const handler = async function (event, context) {
   console.log("Function execution started");
 
   try {
     const database = (await clientPromise).db("travel-app");
 
-    // Fetch data from the desired collection
+    //Estraiamo i parametri dall'evento. In netlify si fa cosi
+
+
+    const collection = event.queryStringParameters.collection;
+    const query = event.queryStringParameters.query;
+    /* const query = 'travel1'
+    const collection = 'travels' */
+
+    //Ci colleghiamo a quella collection
     const queryCollection = database.collection(collection);
 
-    const results = await queryCollection.find({ query }).toArray();
+    const travel = await queryCollection.find({ _id: query }).toArray();
+
+    const daysCollection = database.collection("days");
+    const days = await daysCollection.find({ 'travel_id': query }).toArray();
 
     // Log successful database connection and query
     console.log("Successfully connected to database and retrieved results");
@@ -29,7 +40,8 @@ const handler = async function (event, context, collection, query) {
       statusCode: 200,
       body: JSON.stringify({
         data: {
-          results
+          travel,
+          days
         },
       }),
     };
