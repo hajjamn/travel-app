@@ -1,5 +1,5 @@
 <script>
-import { RouterLink } from "vue-router";
+import { RouterLink, RouterView } from "vue-router";
 
 export default {
   components: {},
@@ -14,8 +14,8 @@ export default {
     <section class="bg-dark">
       <div class="container py-5 text-center text-white">
         <h1>HEADER</h1>
-        <RouterLink to="/registration" />
       </div>
+      <RouterLink to="/registration">Registration</RouterLink>
     </section>
   </header>
 </template>
