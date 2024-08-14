@@ -1,8 +1,8 @@
 <script>
-import { store } from './store.js'
-import AppHeader from './components/AppHeader.vue'
-import AppContent from './components/AppContent.vue'
-import AppFooter from './components/AppFooter.vue'
+import { store } from "./store.js";
+import AppHeader from "./layout/AppHeader.vue";
+import AppContent from "./layout/AppContent.vue";
+import AppFooter from "./layout/AppFooter.vue";
 
 export default {
   components: {
@@ -13,24 +13,20 @@ export default {
   data() {
     return {
       store,
-    }
-  }
-}
-
+    };
+  },
+};
 </script>
 
 <template>
-
   <div id="app">
     <AppHeader></AppHeader>
     <AppContent></AppContent>
     <AppFooter></AppFooter>
-
   </div>
-
 </template>
 
 <style lang="scss">
-@use './assets/style/general.scss';
-@use 'bootstrap'
+@use "./assets/style/general.scss";
+@use "bootstrap";
 </style>
