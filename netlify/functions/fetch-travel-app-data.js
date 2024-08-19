@@ -35,6 +35,9 @@ const handler = async function (event, context) {
 
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         env: {
           MONGODB_URI: process.env.MONGODB_URI ? "Set" : "Not Set",

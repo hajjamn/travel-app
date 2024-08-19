@@ -20,19 +20,16 @@ const handler = async function (event, context) {
     //recuperare i parametri dal form
 
     const queryTravel = {
-      _id: "travel1234",
       user_id: "user3",
       destination: "Padova",
       start_date: "2024-08-15",
       end_date: "2024-08-18",
     };
     const queryDays = {
-      _id: "day1234",
       travel_id: "travel1234",
       date: "2024-12-15",
     };
     const queryStops = {
-      _id: "stop1234",
       day_id: "day1234",
       title: "CasaMiaXd",
       coordinates: {

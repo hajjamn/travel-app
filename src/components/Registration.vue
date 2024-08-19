@@ -9,25 +9,53 @@ export default {
       },
     };
   },
-  methods: {},
+  methods: {
+    query(dataUser) {
+      // Make a GET request to the serverless function, passing form data as params
+      this.$axios
+        .get("registration", {
+          params: { dataUser },
+        })
+        .then((response) => {
+          // Print response in the console
+          console.log("success");
+        })
+        .catch((error) => {
+          // Print error in the console
+          console.error(
+            "Error:",
+            error.response ? error.response.data : error.message
+          );
+        });
+    },
+  },
 };
 </script>
+
 <template>
   <h1>Ciao</h1>
-  <form action="" method="post">
+  <form @submit.prevent="query(newUser)">
     <label for="email">Your email</label>
     <input
       type="email"
       id="email"
-      name="user"
+      v-model="newUser.email"
       placeholder="your@email.com"
     /><br />
     <label for="username">Username</label>
-    <input type="text" id="username" name="user" placeholder="user" /><br />
+    <input
+      type="text"
+      id="username"
+      v-model="newUser.username"
+      placeholder="user"
+    /><br />
     <label for="password">Password</label>
-    <input type="password" id="password" name="user" /><br />
+    <input type="password" id="password" v-model="newUser.password" /><br />
     <input type="submit" value="Submit" />
   </form>
+  <div>
+    <button @click="query(newUser)">Test</button>
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

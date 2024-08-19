@@ -1,57 +1,65 @@
 import bcrypt from "bcrypt";
-
-//Importiamo MongoClient che ci permette di usare i driver per "parlare la stessa lingua" di MongoDB
 import { MongoClient } from "mongodb";
-
-//Importiamo dotenv per usare le variabili nel file .env in ambiente di sviluppo
 import dotenv from "dotenv";
+
 dotenv.config();
 
-//Recuperiamo l'Uri supersegreto di MongoDB e la usiamo per fare la connessione
 const mongodbUri = process.env.MONGODB_URI;
 const mongoClient = new MongoClient(mongodbUri);
 
-//Connessione al server
 const clientPromise = mongoClient.connect();
 
-function register(email, username, password) {
-  const handler = async function (event, context) {
-    console.log("Function execution started");
-    try {
-      const database = (await clientPromise).db("travel-app");
+const handler = async function (event, context) {
+  console.log("Function execution started");
 
-      const user = {
-        email: email,
-        name: username,
-        password: bcrypt.hash(password),
-      };
+  try {
+    // Connect to the database
+    const database = (await clientPromise).db("travel-app");
 
-      const usersCollection = database.collection("users");
+    // Extract user data from query parameters
+    const userData = {
+      email: event.queryStringParameters["dataUser[email]"],
+      username: event.queryStringParameters["dataUser[username]"],
+      password: event.queryStringParameters["dataUser[password]"],
+    };
 
-      const userInsert = await usersCollection.insertOne(user);
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          data: {
-            usersCollection,
-            userInsert,
-          },
-        }),
-      };
-    } catch (error) {
-      // Log the error details
-      console.error("Error connecting to MongoDB:", error);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({
-          message: "Internal Server Error",
-          error: error.toString(),
-          stack: error.stack,
-        }),
-      };
-    }
-  };
-}
+    // Create user object
+    const user = {
+      email: userData.email,
+      name: userData.username,
+      hashed_password: hashedPassword,
+    };
 
-export { register };
+    // Insert user into the "users" collection
+    const usersCollection = database.collection("users");
+    const userInsert = await usersCollection.insertOne(user);
+
+    // Return a success response
+    return {
+      statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: "User successfully created",
+        userId: userInsert.insertedId,
+      }),
+    };
+  } catch (error) {
+    console.error("Error processing request:", error);
+
+    // Return an error response
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: "Internal Server Error",
+        error: error.message,
+      }),
+    };
+  }
+};
+
+export { handler };
