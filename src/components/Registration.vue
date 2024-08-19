@@ -1,5 +1,16 @@
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      newUser: {
+        email: "",
+        username: "",
+        password: "",
+      },
+    };
+  },
+  methods: {},
+};
 </script>
 <template>
   <h1>Ciao</h1>
