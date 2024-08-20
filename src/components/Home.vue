@@ -64,9 +64,7 @@ export default {
   <main>
     <section class="h-100">
       <div class="container py-5 h-100">
-        <div
-          class="row aling-items-center flex-column justify-content-between h-100"
-        >
+        <div class="row aling-items-center flex-column justify-content-between h-100">
           <div class="col-auto text-center">
             <h1>Hello Vue <font-awesome-icon :icon="['fab', 'vuejs']" /></h1>
           </div>
@@ -80,17 +78,14 @@ export default {
                   <p>{{ travel.start_date }} / {{ travel.end_date }}</p>
                 </div>
                 <div class="card-footer">
-                  <div
-                    class="btn btn-secondary"
-                    @click="query('travels', travel._id)"
-                  >
+                  <div class="btn btn-secondary" @click="query('travels', travel._id)">
                     Test query
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-auto">
+          <div class="col-auto mt-3">
             <div class="btn btn-secondary" @click="createTravel">
               Test query create
             </div>

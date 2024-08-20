@@ -7,6 +7,7 @@ export default {
         username: "",
         password: "",
       },
+      showErrorAlert: false
     };
   },
   methods: {
@@ -18,13 +19,14 @@ export default {
         })
         .then((response) => {
           // Print response in the console
-          console.log("success");
+          console.log(response.data.message);
         })
         .catch((error) => {
           // Print error in the console
+          this.showErrorAlert = error.response.data.showErrorAlert
           console.error(
             "Error:",
-            error.response ? error.response.data : error.message
+            error.response ? error.response.data : error.message,
           );
         });
     },
@@ -34,21 +36,12 @@ export default {
 
 <template>
   <h1>Ciao</h1>
+  <h2 v-if="showErrorAlert">ERRORE</h2>
   <form @submit.prevent="query(newUser)">
     <label for="email">Your email</label>
-    <input
-      type="email"
-      id="email"
-      v-model="newUser.email"
-      placeholder="your@email.com"
-    /><br />
+    <input type="email" id="email" v-model="newUser.email" placeholder="your@email.com" /><br />
     <label for="username">Username</label>
-    <input
-      type="text"
-      id="username"
-      v-model="newUser.username"
-      placeholder="user"
-    /><br />
+    <input type="text" id="username" v-model="newUser.username" placeholder="user" /><br />
     <label for="password">Password</label>
     <input type="password" id="password" v-model="newUser.password" /><br />
     <input type="submit" value="Submit" />

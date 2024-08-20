@@ -12,10 +12,17 @@ export default {
 <template>
   <header>
     <section class="bg-dark">
-      <div class="container py-5 text-center text-white">
-        <h1>HEADER</h1>
+      <div class="container py-5 text-white">
+        <div class="row aling-items-center justify-content-between">
+          <div class="col-auto">
+            <h1 class="text-center mb-3">PlanAVacay</h1>
+          </div>
+          <div class="col-auto">
+            <RouterLink to="/" class="btn btn-warning me-3">Home</RouterLink>
+            <RouterLink to="/registration" class="btn btn-warning">Registration</RouterLink>
+          </div>
+        </div>
       </div>
-      <RouterLink to="/registration">Registration</RouterLink>
     </section>
   </header>
 </template>

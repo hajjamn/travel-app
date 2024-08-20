@@ -29,12 +29,30 @@ const handler = async function (event, context) {
     // Create user object
     const user = {
       email: userData.email,
-      name: userData.username,
+      username: userData.username,
       hashed_password: hashedPassword,
     };
 
-    // Insert user into the "users" collection
+    // collegamento alla collection
     const usersCollection = database.collection("users");
+
+    const emailExists = await usersCollection.findOne({ email: userData.email });
+    /* const usernameExists = await usersCollection.findOne({ username: userData.name }); */
+
+    if (emailExists) {
+      return {
+        statusCode: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: "Email already used, choose another",
+          showErrorAlert: true
+        }),
+      };
+    }
+
+    //inserimento utente nella collection
     const userInsert = await usersCollection.insertOne(user);
 
     // Return a success response
@@ -45,6 +63,7 @@ const handler = async function (event, context) {
       },
       body: JSON.stringify({
         message: "User successfully created",
+        showErrorAlert: false,
         userId: userInsert.insertedId,
       }),
     };
