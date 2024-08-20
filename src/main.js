@@ -1,8 +1,11 @@
 import { createApp } from "vue";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import App from "./App.vue";
 import Home from "./components/Home.vue";
 import Registration from "./components/Registration.vue";
+import Login from "./components/Login.vue";
 
 import axiosPlugin from "./plugins/axios";
 
@@ -16,6 +19,7 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   { path: "/", component: Home, name: "home" },
   { path: "/registration", component: Registration, name: "registration" },
+  { path: "/login", component: Login, name: "login" },
 ];
 
 const router = createRouter({
@@ -27,6 +31,7 @@ export default router;
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import cookieParser from "cookie-parser";
 
 /* add icons to the library */
 library.add(fas, far, fab);
