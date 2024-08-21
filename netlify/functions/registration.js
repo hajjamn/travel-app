@@ -36,7 +36,9 @@ const handler = async function (event, context) {
     // collegamento alla collection
     const usersCollection = database.collection("users");
 
-    const emailExists = await usersCollection.findOne({ email: userData.email });
+    const emailExists = await usersCollection.findOne({
+      email: userData.email,
+    });
     /* const usernameExists = await usersCollection.findOne({ username: userData.name }); */
 
     if (emailExists) {
@@ -47,7 +49,7 @@ const handler = async function (event, context) {
         },
         body: JSON.stringify({
           message: "Email already used, choose another",
-          showErrorAlert: true
+          showErrorAlert: true,
         }),
       };
     }

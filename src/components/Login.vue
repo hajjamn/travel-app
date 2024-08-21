@@ -1,23 +1,57 @@
 <script>
 export default {
   data() {
-    return [];
+    return {
+      user: {
+        email: "",
+        password: "",
+      },
+      showErrorAlert: false,
+    };
   },
-  methods: {},
+  methods: {
+    query(dataUser) {
+      this.$axios
+        .get("login", {
+          params: { dataUser },
+        })
+        .then((response) => {
+          // Print response in the console
+          console.log(response.data.message);
+          if (response.data.message === "Login successful") {
+            // Navigate to another page, e.g., a dashboard
+            this.$router.push("/dashboard");
+          }
+        })
+        .catch((error) => {
+          // Show error alert on UI
+          this.showErrorAlert = error.response.data.showErrorAlert;
+          console.error(
+            "Error:",
+            error.response ? error.response.data : error.message
+          );
+        });
+    },
+  },
 };
 </script>
 <template>
+  <h1>Login</h1>
+  <h2 v-if="showErrorAlert">ERRORE</h2>
+  <form @submit.prevent="query(user)">
+    <label for="email">Your email</label>
+    <input
+      type="email"
+      id="email"
+      v-model="user.email"
+      placeholder="your@email.com"
+    /><br />
+    <label for="password">Password</label>
+    <input type="password" id="password" v-model="user.password" /><br />
+    <input type="submit" value="Submit" />
+  </form>
   <div>
-    <h1>Login</h1>
-    <form action="">
-      <label for="email">Email:</label>
-      <input type="email" name="email" id="email" /> <br />
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" /><br />
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" /><br />
-      <button class="btn-warning btn">Log-in</button>
-    </form>
+    <button @click="query(user)">Test</button>
   </div>
 </template>
 

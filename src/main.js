@@ -1,13 +1,11 @@
 import { createApp } from "vue";
 
-
-
 import App from "./App.vue";
 import Home from "./components/Home.vue";
 import Registration from "./components/Registration.vue";
 import UpdateTravelView from "./view/UpdateTravelView.vue";
 import Login from "./components/Login.vue";
-import TravelCreate from './components/TravelCreate.vue';
+import TravelCreate from "./components/TravelCreate.vue";
 
 import axiosPlugin from "./plugins/axios";
 
@@ -23,7 +21,12 @@ const routes = [
   { path: "/registration", component: Registration, name: "registration" },
   { path: "/login", component: Login, name: "login" },
   { path: "/new-travel", component: TravelCreate, name: "travelCreate" },
-  { path: "/update/:id", component: UpdateTravelView, name: "updateTravelView", props: (route) => ({ id: route.query.id }) },
+  {
+    path: "/update/:id",
+    component: UpdateTravelView,
+    name: "updateTravelView",
+    props: (route) => ({ id: route.query.id }),
+  },
 ];
 
 const router = createRouter({
@@ -35,7 +38,6 @@ export default router;
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
 
 /* add icons to the library */
 library.add(fas, far, fab);
