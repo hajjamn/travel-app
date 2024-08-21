@@ -19,7 +19,10 @@ export default {
           </div>
           <div class="col-auto">
             <RouterLink to="/" class="btn btn-warning me-3">Home</RouterLink>
-            <RouterLink to="/registration" class="btn btn-warning">Registration</RouterLink>
+            <RouterLink to="/registration" class="btn btn-warning me-3"
+              >Registration</RouterLink
+            >
+            <RouterLink to="/login" class="btn btn-warning">Login</RouterLink>
           </div>
         </div>
       </div>
