@@ -7,7 +7,7 @@ export default {
     };
   },
   methods: {
-    test() {
+    fetchData() {
       this.$axios
         .get("/fetch-travel-app-data")
         //make a call to our serverless function
@@ -46,6 +46,7 @@ export default {
         .then((response) => {
           //print response in console
           console.log(response.data);
+          this.fetchData()
         })
         .catch((error) => {
           //print error
@@ -54,8 +55,8 @@ export default {
     },
   },
   created() {
-    //when app is created prints the results from calling the test function
-    this.test();
+    //when app is created prints the results from calling the fetchData function
+    this.fetchData();
   },
 };
 </script>
