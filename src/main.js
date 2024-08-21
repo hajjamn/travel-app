@@ -6,6 +6,7 @@ import App from "./App.vue";
 import Home from "./components/Home.vue";
 import Registration from "./components/Registration.vue";
 import Login from "./components/Login.vue";
+import TravelCreate from './components/TravelCreate.vue';
 
 import axiosPlugin from "./plugins/axios";
 
@@ -20,6 +21,7 @@ const routes = [
   { path: "/", component: Home, name: "home" },
   { path: "/registration", component: Registration, name: "registration" },
   { path: "/login", component: Login, name: "login" },
+  { path: "/new-travel", component: TravelCreate, name: "travelCreate" }
 ];
 
 const router = createRouter({

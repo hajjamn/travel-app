@@ -40,6 +40,12 @@ const handler = async function (event, context) {
   try {
     const database = (await clientPromise).db("travel-app");
 
+    //Estraiamo i parametri dall'evento. In netlify si fa cosi
+    const destination = event.queryStringParameters.destination;
+    const start_date = event.queryStringParameters.start_date;
+    const end_date = event.queryStringParameters.end_date;
+
+
     //Generiamo un id unico con la funzione creata sopra
     const travelId = await generateUniqueObjectId(database, 'travels');
 
@@ -47,9 +53,9 @@ const handler = async function (event, context) {
     const newTravel = {
       _id: travelId,
       user_id: "user3",
-      destination: "Milano",
-      start_date: "2024-08-13",
-      end_date: "2024-08-16",
+      destination: destination,
+      start_date: start_date,
+      end_date: end_date,
     };
 
     //Inseriamo il viaggio nella collection

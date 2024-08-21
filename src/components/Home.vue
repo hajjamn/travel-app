@@ -39,20 +39,6 @@ export default {
           console.log(error);
         });
     },
-    createTravel() {
-      //collection in this case is travels and the query is the travel._id
-      this.$axios
-        .get("create-travel")
-        .then((response) => {
-          //print response in console
-          console.log(response.data);
-          this.fetchData()
-        })
-        .catch((error) => {
-          //print error
-          console.log(error);
-        });
-    },
   },
   created() {
     //when app is created prints the results from calling the fetchData function
@@ -65,9 +51,12 @@ export default {
   <main>
     <section class="h-100">
       <div class="container py-5 h-100">
-        <div class="row aling-items-center flex-column justify-content-between h-100">
+        <div class="row aling-items-center flex-column justify-content-center h-100">
           <div class="col-auto text-center">
-            <h1>Hello Vue <font-awesome-icon :icon="['fab', 'vuejs']" /></h1>
+            <h1>Your Travels! <font-awesome-icon :icon="['fab', 'vuejs']" /></h1>
+          </div>
+          <div class="col-auto my-4">
+            <RouterLink to="/new-travel" class="btn btn-warning">Start a new Journey</RouterLink>
           </div>
           <div class="row text-center">
             <div class="col-4" v-for="travel in responseData.travels">
@@ -84,11 +73,6 @@ export default {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="col-auto mt-3">
-            <div class="btn btn-secondary" @click="createTravel">
-              Test query create
             </div>
           </div>
         </div>
