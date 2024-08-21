@@ -1,5 +1,5 @@
-//Importiamo MongoClient che ci permette di usare i driver per "parlare la stessa lingua" di MongoDB
-import { MongoClient } from "mongodb";
+//Importiamo MongoClient che ci permette di usare i driver per "parlare la stessa lingua" di MongoDB. ObjectId ci fa creare gli id
+import { MongoClient, ObjectId } from "mongodb";
 
 //Importiamo dotenv per usare le variabili nel file .env in ambiente di sviluppo
 import dotenv from "dotenv";
@@ -12,56 +12,89 @@ const mongoClient = new MongoClient(mongodbUri);
 //Connessione al server
 const clientPromise = mongoClient.connect();
 
+//Funzione per generare il l'id da assegnare al travel e poterlo poi assegnare al travel_id dei vari giorni
+const generateUniqueObjectId = async (database, collection) => {
+
+  let uniqueId;
+  let isUnique = false;
+
+  //Finche' il valore isUnique e' false
+  while (!isUnique) {
+    uniqueId = new ObjectId();//genera un nuovo oggetto
+
+    // Controlliamo se uniqueId esiste gia' nella collection travels
+    const existingTravel = await database.collection(collection).findOne({ _id: uniqueId });
+
+    if (!existingTravel) {
+      isUnique = true; // Se non trova nulla, isUnique diventa true e il ciclo termina
+    }
+  }
+
+  //ritorniamo lo uniqueId
+  return uniqueId;
+};
+
+
 const handler = async function (event, context) {
   console.log("Function execution started");
   try {
     const database = (await clientPromise).db("travel-app");
 
-    //recuperare i parametri dal form
+    //Generiamo un id unico con la funzione creata sopra
+    const travelId = await generateUniqueObjectId(database, 'travels');
 
-    const queryTravel = {
+    //Usiamo dati statici e l'ID generato per creare un travel
+    const newTravel = {
+      _id: travelId,
       user_id: "user3",
-      destination: "Padova",
-      start_date: "2024-08-15",
-      end_date: "2024-08-18",
+      destination: "Milano",
+      start_date: "2024-08-13",
+      end_date: "2024-08-16",
     };
-    const queryDays = {
-      travel_id: "travel1234",
-      date: "2024-12-15",
-    };
-    const queryStops = {
-      day_id: "day1234",
-      title: "CasaMiaXd",
-      coordinates: {
-        latitude: 41.8902,
-        longitude: 12.4922,
-      },
-    };
-    // const queryUser = event.queryStringParameters.user;
-    // const queryTravel = event.queryStringParameters.travel;
-    // const queryDays = event.queryStringParameters.days;
-    // const queryStops = event.queryStringParameters.stops;
 
-    const travelsCollection = database.collection("travels");
-    const daysCollection = database.collection("days");
-    const stopsCollection = database.collection("stops");
+    //Inseriamo il viaggio nella collection
+    const insertedTravel = await database.collection("travels").insertOne(newTravel);
+    console.log("Travel inserted: ", insertedTravel)
 
-    const travels = await travelsCollection.insertOne(queryTravel);
-    const days = await daysCollection.insertOne(queryDays);
-    const stops = await stopsCollection.insertOne(queryStops);
+    // Parsiamo start_date ed end_date cosi' invece di stringhe sono date
+    const startDate = new Date(newTravel.start_date);
+    const endDate = new Date(newTravel.end_date);
+
+    // Creiamo un bell'array per contenere i giorni che andremo a creare
+    const days = [];
+
+    // Cicliamo ogni data da start date a End date. Sembra brutto ma e' leggibile
+    for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+
+      //creiamo un ID per il giorno
+      const dayId = await generateUniqueObjectId(database, 'days');
+
+      // Creiamo un oggetto per questa data
+      const newDay = {
+        _id: dayId,
+        travel_id: travelId, // Usiamo l'ID generato prima
+        date: d, // Convertiamo al formato di data YYYY-MM-DD
+      };
+
+      // Pushiamo l-oggetto nell'array
+      days.push(newDay);
+    }
+
+    // Inseriamo tutti gli oggetti nell'array nella collection
+    const insertedDays = await database.collection("days").insertMany(days);
+    console.log("Days inserted: ", insertedDays)
+
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         data: {
-          travelsCollection,
-          daysCollection,
-          stopsCollection,
+          insertedTravel,
+          insertedDays
         },
       }),
     };
 
-    //inserire i parametri dentro al database
   } catch (error) {
     // Log the error details
     console.error("Error connecting to MongoDB:", error);
