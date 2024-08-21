@@ -1,5 +1,5 @@
 //Importiamo MongoClient che ci permette di usare i driver per "parlare la stessa lingua" di MongoDB
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, BSON } from "mongodb";
 
 //Importiamo dotenv per usare le variabili nel file .env in ambiente di sviluppo
 import dotenv from "dotenv";
@@ -19,16 +19,16 @@ const handler = async (event, context) => {
         //connect al database
         const database = (await clientPromise).db("travel-app");
 
-        //parse form data (URLSearchParams(event.body) parse and handle query string, the form data is sent in the request body as a query string )
-        const formData = new URLSearchParams(event.body);
+         // Parse form data
+         const formData = new URLSearchParams(event.body);
 
-        const travel_id = formData.get("travel_id");
-        const destination  = formData.get("destination");
-        const start_date = formData.get("start_date");
-        const end_date = formData.get("end_date");
+         const travel_id = formData.get("travel_id");
+         const destination = formData.get("destination");
+         const start_date = formData.get("start_date");
+         const end_date = formData.get("end_date");
 
         //define the mongoDB update queries
-        const queryTravel = {_id: new ObjectId(travel_id)};
+        const queryTravel = {_id: new BSON.ObjectId(travel_id)};
         const updateTravel = {
             $set: {
                 destination: destination,
@@ -41,7 +41,7 @@ const handler = async (event, context) => {
         const travelsCollection = database.collection("travels");
 
         //update document in MongoDB
-        const updatedTravel = await travelsCollection.updateOne(queryTravel, updateTravel);
+        const updatedTravel = await travelsCollection.updateOne(queryTravel, updatedTravel);
 
         return {
             statusCode: 200,

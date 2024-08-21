@@ -1,4 +1,6 @@
 <script>
+import { RouterLink } from 'vue-router';
+
 export default {
   name: "AppContent",
   data() {
@@ -28,6 +30,7 @@ export default {
           params: {
             collection: collection,
             query: query,
+            id: query,
           },
         })
         .then((response) => {
@@ -37,6 +40,13 @@ export default {
         .catch((error) => {
           //print error
           console.log(error);
+
+          this.$router.push({
+            name: 'updateTravelView',
+            params: {
+              id: query,
+            },
+          });
         });
     },
     createTravel() {
@@ -64,14 +74,12 @@ export default {
   <main>
     <section class="h-100">
       <div class="container py-5 h-100">
-        <div
-          class="row aling-items-center flex-column justify-content-between h-100"
-        >
+        <div class="row aling-items-center flex-column justify-content-between h-100">
           <div class="col-auto text-center">
             <h1>Hello Vue <font-awesome-icon :icon="['fab', 'vuejs']" /></h1>
           </div>
           <div class="row text-center">
-            <div class="col-4" v-for="travel in responseData.travels">
+            <div class="col-4" v-for="travel in responseData.travels" :key="travel._id">
               <div class="card">
                 <div class="card-header">
                   <h2>{{ travel.destination }}</h2>
@@ -79,11 +87,9 @@ export default {
                 <div class="card-body">
                   <p>{{ travel.start_date }} / {{ travel.end_date }}</p>
                 </div>
+                <RouterLink :to="{ name: 'updateTravelView', params: { id: travel._id } }">Edit</RouterLink>
                 <div class="card-footer">
-                  <div
-                    class="btn btn-secondary"
-                    @click="query('travels', travel._id)"
-                  >
+                  <div class="btn btn-secondary" @click="query('travels', travel._id)">
                     Test query
                   </div>
                 </div>

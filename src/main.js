@@ -3,6 +3,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import Home from "./components/Home.vue";
 import Registration from "./components/Registration.vue";
+import UpdateTravelView from "./view/UpdateTravelView.vue";
 
 import axiosPlugin from "./plugins/axios";
 
@@ -16,6 +17,7 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   { path: "/", component: Home, name: "home" },
   { path: "/registration", component: Registration, name: "registration" },
+  {path: "/update/:id", component: UpdateTravelView, name: "updateTravelView", props: (route) => ({id: route.query.id})},
 ];
 
 const router = createRouter({

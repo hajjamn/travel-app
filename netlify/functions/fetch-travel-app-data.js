@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();
 const mongodbUri = process.env.MONGODB_URI;
@@ -16,6 +16,8 @@ const handler = async function (event, context) {
     MONGODB_DATABASE: "travel-app",
   });
 
+  const travelId = event.queryStringParameters ? event.queryStringParameters.id : null;
+
   try {
     const database = (await clientPromise).db("travel-app");
 
@@ -29,6 +31,21 @@ const handler = async function (event, context) {
     const travels = await travelsCollection.find({}).toArray();
     const days = await daysCollection.find({}).toArray();
     const stops = await stopsCollection.find({}).toArray();
+
+    let travel;
+    try {
+      travel = await travelsCollection.findOne({ _id: new ObjectId(travelId) });
+    } catch (error) {
+      return {
+        statusCode: 400,  // Bad Request
+        body: JSON.stringify({
+          message: "Invalid travel ID format.",
+          error: error.toString(),
+        }),
+      };
+    }
+
+   
 
     // Log successful database connection and query
     console.log("Successfully connected to database and retrieved results");
@@ -49,6 +66,7 @@ const handler = async function (event, context) {
           days,
           stops,
         },
+        travel,
       }),
     };
   } catch (error) {
