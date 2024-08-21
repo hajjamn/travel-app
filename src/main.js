@@ -1,6 +1,6 @@
 import { createApp } from "vue";
-import cors from "cors";
-import cookieParser from "cookie-parser";
+
+
 
 import App from "./App.vue";
 import Home from "./components/Home.vue";
@@ -31,7 +31,7 @@ export default router;
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import cookieParser from "cookie-parser";
+
 
 /* add icons to the library */
 library.add(fas, far, fab);
