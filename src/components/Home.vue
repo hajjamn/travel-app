@@ -104,7 +104,6 @@ export default {
                 <div class="card-body">
                   <p>{{ travel.start_date }} / {{ travel.end_date }}</p>
                 </div>
-                <RouterLink :to="{ name: 'updateTravelView', params: { id: travel._id } }">Edit</RouterLink>
                 <div class="card-footer">
                   <div class="btn btn-secondary" @click="query('travels', travel._id)">
                     Edit

@@ -34,10 +34,7 @@ export default {
             responseData: Object
         };
     },
-    // props: ['id'],
     created() {
-        this.fetchTravel();
-        // First check if 'travelData' exists in the query
         const travelData = this.$route.query.travelData;
         const travelId = this.$route.params.id;
         console.log(this.$route.params);
@@ -63,28 +60,6 @@ export default {
         }
     },
     methods: {
-        // async fetchTravel() {
-        //     try {
-        //         //send the request with the travel ID as a query parameter
-        //         const response = await this.$axios.get(`/fetch-travel?id=${this.travelId}`);
-        //         this.travel = response.data.travel;
-        //         console.log(response.data.travel);
-        //     } catch (error) {
-        //         console.error('Error fetching travel:', error);
-        //     }
-        // },
-        async fetchTravel(travelId) {
-            this.$axios
-                .get("/fetch-travel", { params: { id: travelId } })
-                .then((response) => {
-                    this.travel = response.data;
-                    console.log("Fetched travel data:", this.travel);
-
-                })
-                .catch((error) => {
-                    console.error("Error fetching travel data:", error);
-                });
-        },
         async submitForm() {
             try {
                 await this.$axios.post('/.netlify/functions/update-travel', this.travel);
