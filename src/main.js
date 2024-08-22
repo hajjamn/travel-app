@@ -21,9 +21,9 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   { path: "/", component: Home, name: "home" },
   { path: "/registration", component: Registration, name: "registration" },
-  {path: "/update/:id", component: UpdateTravelView, name: "updateTravelView", props: (route) => ({id: route.query.id})},
   { path: "/login", component: Login, name: "login" },
-  { path: "/new-travel", component: TravelCreate, name: "travelCreate" }
+  { path: "/new-travel", component: TravelCreate, name: "travelCreate" },
+  { path: "/update/:id", component: UpdateTravelView, name: "updateTravelView", props: (route) => ({ id: route.query.id }) },
 ];
 
 const router = createRouter({
