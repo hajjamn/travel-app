@@ -49,19 +49,6 @@ export default {
           });
         });
     },
-    createTravel() {
-      //collection in this case is travels and the query is the travel._id
-      this.$axios
-        .get("create-travel")
-        .then((response) => {
-          //print response in console
-          console.log(response.data);
-        })
-        .catch((error) => {
-          //print error
-          console.log(error);
-        });
-    },
   },
   created() {
     //when app is created prints the results from calling the fetchData function
@@ -97,11 +84,6 @@ export default {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="col-auto">
-            <div class="btn btn-secondary" @click="createTravel">
-              Test query create
             </div>
           </div>
         </div>
