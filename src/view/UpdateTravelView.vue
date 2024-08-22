@@ -34,28 +34,32 @@ export default {
             responseData: Object
         };
     },
-    // props: ['id'],
     created() {
-        this.fetchTravel();
+        const travelData = this.$route.query.travelData;
+        const travelId = this.$route.params.id;
+        console.log(this.$route.params);
+        if (travelData) {
+            try {
+                // Parse the travelData only if it's defined
+                const parsedTravelData = JSON.parse(travelData);
+                console.log("Fetched travel data:", parsedTravelData);
+
+                // Use the parsed travel data as needed in your component
+                this.travel = parsedTravelData;
+            } catch (error) {
+                console.error("Error parsing travel data:", error);
+            }
+        } else if (travelId) {
+            // If no travelData is found, fetch the travel data using the travelId
+            console.log("Fetching travel data using travelId:", travelId);
+
+            this.fetchTravel(travelId); // Fetch travel data from server
+
+        } else {
+            console.error("No travel data or travelId found.");
+        }
     },
     methods: {
-        // async fetchTravel() {
-        //     try {
-        //         //send the request with the travel ID as a query parameter
-        //         const response = await this.$axios.get(`/fetch-travel?id=${this.travelId}`);
-        //         this.travel = response.data.travel;
-        //         console.log(response.data.travel);
-        //     } catch (error) {
-        //         console.error('Error fetching travel:', error);
-        //     }
-        // },
-        async fetchTravel() {
-            this.$axios
-                .get("/fetch-travel-app-data")
-                .then((response) => {
-                    console.log(response.data)
-                })
-        },
         async submitForm() {
             try {
                 await this.$axios.post('/.netlify/functions/update-travel', this.travel);
@@ -64,26 +68,6 @@ export default {
                 console.error('Error updating travel:', error);
                 alert('Error updating travel.');
             }
-        },
-        query(collection, query) {
-            //collection in this case is travels and the query is the travel._id
-            this.$axios
-                .get("fetch-travel", {
-                    //make a call to our serverless function passing params
-                    params: {
-                        collection: collection,
-                        query: query,
-                        id: query,
-                    },
-                })
-                .then((response) => {
-                    //print response in console
-                    console.log(response.data);
-                })
-                .catch((error) => {
-                    //print error
-                    console.log(error);
-                });
         },
     }
 };

@@ -22,20 +22,37 @@ export default {
           console.log(error);
         });
     },
-    query(collection, query) {
+    query(collection, travelId) {
       //collection in this case is travels and the query is the travel._id
       this.$axios
         .get("fetch-travel", {
           //make a call to our serverless function passing params
           params: {
             collection: collection,
-            query: query,
-            id: query,
+            query: travelId,
+            id: travelId,
           },
         })
         .then((response) => {
           //print response in console
           console.log(response.data);
+          //store data
+          const travel = response.data;
+
+          if (travel) {
+            //pass data using route 'state' and navigate to updateTravelView
+            this.$router.push({
+              name: 'updateTravelView',
+              params: {
+                id: travelId,
+              },
+              query: {
+                travelData: JSON.stringify(travel), //pass the travel data as a quey parameter
+              },
+            });
+          } else {
+            console.log(`No travel found with ID: ${travelId}`);
+          }
         })
         .catch((error) => {
           //print error
@@ -44,7 +61,7 @@ export default {
           this.$router.push({
             name: 'updateTravelView',
             params: {
-              id: query,
+              id: travelId,
             },
           });
         });
@@ -77,10 +94,9 @@ export default {
                 <div class="card-body">
                   <p>{{ travel.start_date }} / {{ travel.end_date }}</p>
                 </div>
-                <RouterLink :to="{ name: 'updateTravelView', params: { id: travel._id } }">Edit</RouterLink>
                 <div class="card-footer">
                   <div class="btn btn-secondary" @click="query('travels', travel._id)">
-                    Test query
+                    Edit
                   </div>
                 </div>
               </div>
