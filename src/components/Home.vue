@@ -83,7 +83,7 @@ export default {
             <h1>Your Travels! <font-awesome-icon :icon="['fab', 'vuejs']" /></h1>
           </div>
           <div class="col-auto my-4">
-            <RouterLink to="/new-travel" class="btn btn-warning">Start a new Journey</RouterLink>
+            <RouterLink to="/new-travel" class="btn btn-brand">Start a new Journey</RouterLink>
           </div>
           <div class="row text-center">
             <div class="col-4" v-for="travel in responseData.travels" :key="travel._id">

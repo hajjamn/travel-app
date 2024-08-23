@@ -74,6 +74,6 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  background-color: lightgray;
+  background-color: var(--neutral-gray);
 }
 </style>
