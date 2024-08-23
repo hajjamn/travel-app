@@ -6,13 +6,13 @@
             <input type="hidden" name="travel_id" :value="travel._id">
 
             <label for="destination">Destination:</label>
-            <input type="text" v-model="travel.destination" placeholder="Enter new destination" required><br><br>
+            <input type="text" v-model="travel.destination" name="destination" id="destination" required><br><br>
 
             <label for="start_date">Start Date:</label>
-            <input type="date" v-model="travel.start_date" required><br><br>
+            <input type="date" v-model="travel.start_date" name="start_date" id="start_date" required><br><br>
 
             <label for="end_date">End Date:</label>
-            <input type="date" v-model="travel.end_date" required><br><br>
+            <input type="date" v-model="travel.end_date" name="end_date" id="end_date" required><br><br>
             <button type="submit">Update</button>
         </form>
     </div>
@@ -29,22 +29,17 @@ export default {
     props: ['id'],
     data() {
         return {
-            travel: null,
-            travelId: this.$route.params.id,
-            responseData: Object
+            travel: null, // Holds travel data once it's available
+            travelId: this.$route.params.id, // Retrieve travelId from route params
+            responseData: Object // Unused for now, but you can use it for additional server responses
         };
     },
     created() {
-        // Retrieve 'travelData' from the URL query parameters using Vue's $route object
+        // Check if travelData is available via query string in the route
         const travelData = this.$route.query.travelData;
-
-        // Retrieve 'id' from the URL path parameters (likely to represent a specific travel item)
+        console.log('Raw travelData from query:', travelData);
         const travelId = this.$route.params.id;
-
-        // Log the entire 'params' object from the URL, which includes all path parameters
-        console.log(this.$route.params);
-
-        // Check if 'travelData' exists in the query parameters
+        console.log('Route params:', this.$route.params);
         if (travelData) {
             try {
                 // If 'travelData' exists, try parsing it from a JSON string into an actual object
@@ -77,11 +72,25 @@ export default {
     methods: {
         async submitForm() {
             try {
-                await this.$axios.post('/.netlify/functions/update-travel', this.travel);
+                console.log('Submitting travel data:', this.travel);
+                await this.$axios.post('update-travel', this.travel);
                 alert('Travel updated successfully!');
             } catch (error) {
                 console.error('Error updating travel:', error);
                 alert('Error updating travel.');
+            }
+        },
+
+        async fetchTravel(travelId) {
+            try {
+                const response = await this.$axios.get('fetch-travel', {
+                    params: { id: travelId },
+                });
+                console.log('Fetched travel data from server:', response.data);
+                this.travel = response.data; // Assign the fetched travel data to `travel`
+                console.log("Parsed travel data:", this.travel);
+            } catch (error) {
+                console.error('Error fetching travel data', error);
             }
         },
     }
