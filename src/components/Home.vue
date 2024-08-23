@@ -23,10 +23,16 @@ export default {
         });
     },
     query(collection, travelId) {
-      //collection in this case is travels and the query is the travel._id
+      // 'collection' in this case is likely the name of the collection (travels),
+      // and 'travelId' is the unique identifier of the travel record (travel._id)
+
+      // Make an HTTP GET request using Axios to a serverless function ('fetch-travel')
       this.$axios
         .get("fetch-travel", {
-          //make a call to our serverless function passing params
+          // Pass parameters in the request, including:
+          // - 'collection' (the collection name, 'travels')
+          // - 'query' (the travelId, which is likely the identifier for the specific travel entry)
+          // - 'id' (another reference to the travelId)
           params: {
             collection: collection,
             query: travelId,
@@ -34,34 +40,39 @@ export default {
           },
         })
         .then((response) => {
-          //print response in console
+          // If the request is successful, log the response data to the console
           console.log(response.data);
-          //store data
+
+          // Store the response data in a local constant 'travel'
           const travel = response.data;
 
+          // Check if the travel data exists
           if (travel) {
-            //pass data using route 'state' and navigate to updateTravelView
+            // If travel data is found, navigate to the 'updateTravelView' route.
+            // Pass the travel ID via route parameters and the travel data itself via the query string.
             this.$router.push({
-              name: 'updateTravelView',
+              name: 'updateTravelView', // Target route name
               params: {
-                id: travelId,
+                id: travelId, // Pass travel ID as a route parameter ( /updateTravelView/:id)
               },
               query: {
-                travelData: JSON.stringify(travel), //pass the travel data as a quey parameter
+                travelData: JSON.stringify(travel), // Pass the travel data as a query parameter (stringified JSON)
               },
             });
           } else {
+            // If no travel data is found for the given ID, log a message
             console.log(`No travel found with ID: ${travelId}`);
           }
         })
         .catch((error) => {
-          //print error
+          // If there's an error during the request, log the error message
           console.log(error);
 
+          // Even if there's an error, navigate to the 'updateTravelView' route, passing the travel ID via route parameters
           this.$router.push({
-            name: 'updateTravelView',
+            name: 'updateTravelView', // Target route name
             params: {
-              id: travelId,
+              id: travelId, // Pass travel ID as a route parameter
             },
           });
         });

@@ -35,27 +35,42 @@ export default {
         };
     },
     created() {
+        // Retrieve 'travelData' from the URL query parameters using Vue's $route object
         const travelData = this.$route.query.travelData;
+
+        // Retrieve 'id' from the URL path parameters (likely to represent a specific travel item)
         const travelId = this.$route.params.id;
+
+        // Log the entire 'params' object from the URL, which includes all path parameters
         console.log(this.$route.params);
+
+        // Check if 'travelData' exists in the query parameters
         if (travelData) {
             try {
-                // Parse the travelData only if it's defined
+                // If 'travelData' exists, try parsing it from a JSON string into an actual object
                 const parsedTravelData = JSON.parse(travelData);
+
+                // Log for debugging
                 console.log("Fetched travel data:", parsedTravelData);
 
-                // Use the parsed travel data as needed in your component
+                // Store the parsed travel data into a component's property
                 this.travel = parsedTravelData;
             } catch (error) {
+                // If parsing fails (e.g., if 'travelData' is not valid JSON), log an error to the console
                 console.error("Error parsing travel data:", error);
             }
         } else if (travelId) {
-            // If no travelData is found, fetch the travel data using the travelId
+            // If no 'travelData' is found but a 'travelId' is present, it likely means the user is navigating directly 
+            // to a URL like /travel/:id and we need to fetch the travel data based on that ID
+
+            // Log the travelId for debugging purposes
             console.log("Fetching travel data using travelId:", travelId);
 
-            this.fetchTravel(travelId); // Fetch travel data from server
+            // Call a method to fetch the travel data from a server using 'travelId'
+            // this.fetchTravel(travelId);
 
         } else {
+            // If neither 'travelData' and 'travelId' is found, log an error indicating there's no relevant data to work with
             console.error("No travel data or travelId found.");
         }
     },
