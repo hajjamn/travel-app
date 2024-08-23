@@ -1,5 +1,6 @@
 /* @use './partials/exmaple.scss'; */
 @use './variables.scss';
+@use './partials/header.scss';
 
 #app {
   height: 100vh;
@@ -16,4 +17,9 @@ main {
 a {
   color: currentColor;
   text-decoration: none;
+}
+
+.btn-brand {
+  background-color: var(--brand-color) !important;
+  color: white !important;
 }
