@@ -41,7 +41,8 @@ const handler = async (event, context) => {
         const travelsCollection = database.collection("travels");
 
         //update document in MongoDB
-        const updatedTravel = await travelsCollection.updateOne(queryTravel, updatedTravel);
+        const updatedTravel = await travelsCollection.updateOne(queryTravel, updateTravel);
+        console.log("Update Result:", updatedTravel);
 
         return {
             statusCode: 200,
