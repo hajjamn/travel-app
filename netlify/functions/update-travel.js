@@ -27,6 +27,13 @@ const handler = async (event, context) => {
          const start_date = formData.get("start_date");
          const end_date = formData.get("end_date");
 
+         console.log("Travel ID:", travel_id);  // Check if travel_id is being passed correctly
+         console.log("Destination:", destination);
+         console.log("Start Date:", start_date);
+         console.log("End Date:", end_date);
+
+         
+
         //define the mongoDB update queries
         const queryTravel = {_id: new BSON.ObjectId(travel_id)};
         const updateTravel = {
@@ -43,6 +50,7 @@ const handler = async (event, context) => {
         //update document in MongoDB
         const updatedTravel = await travelsCollection.updateOne(queryTravel, updateTravel);
         console.log("Update Result:", updatedTravel);
+
 
         return {
             statusCode: 200,

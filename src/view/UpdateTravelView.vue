@@ -75,6 +75,12 @@ export default {
                 console.log('Submitting travel data:', this.travel);
                 await this.$axios.post('update-travel', this.travel);
                 alert('Travel updated successfully!');
+
+                // After the update, navigate back to Home and refetch the data
+                this.$router.push({ name: 'home' });
+
+                // Optionally, you could emit an event to refresh data on Home
+                this.$emit('travel-updated');
             } catch (error) {
                 console.error('Error updating travel:', error);
                 alert('Error updating travel.');

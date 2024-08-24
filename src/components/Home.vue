@@ -82,6 +82,9 @@ export default {
     //when app is created prints the results from calling the fetchData function
     this.fetchData();
   },
+  mounted() {
+    this.fetchData();
+  }
 };
 </script>
 
