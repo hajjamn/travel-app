@@ -15,6 +15,7 @@
             <input type="date" v-model="travel.end_date" name="end_date" id="end_date" required><br><br>
             <button type="submit">Update</button>
         </form>
+        <h1>Inizio: {{ travel.destination || 'No destination available' }}</h1>
     </div>
     <div v-else>
         <h3>Travel is loading...</h3>
@@ -49,11 +50,23 @@ export default {
                 console.log("Fetched travel data:", parsedTravelData);
 
                 // Store the parsed travel data into a component's property
-                this.travel = parsedTravelData;
+                // this.travel = parsedTravelData; 
+                // console.log(this.travel);
+
+                // Assuming you want the first entry in the "travel" array
+                if (parsedTravelData.data && parsedTravelData.data.travel && parsedTravelData.data.travel.length > 0) {
+                    this.travel = parsedTravelData.data.travel[0];  // Access the first travel item
+                    console.log("Fetched travel data:", this.travel);
+
+                } else {
+                    console.error("Travel data is missing in the response.");
+                }
+
             } catch (error) {
                 // If parsing fails (e.g., if 'travelData' is not valid JSON), log an error to the console
                 console.error("Error parsing travel data:", error);
             }
+
         } else if (travelId) {
             // If no 'travelData' is found but a 'travelId' is present, it likely means the user is navigating directly 
             // to a URL like /travel/:id and we need to fetch the travel data based on that ID
@@ -62,7 +75,7 @@ export default {
             console.log("Fetching travel data using travelId:", travelId);
 
             // Call a method to fetch the travel data from a server using 'travelId'
-            // this.fetchTravel(travelId);
+            this.fetchTravel(travelId);
 
         } else {
             // If neither 'travelData' and 'travelId' is found, log an error indicating there's no relevant data to work with
