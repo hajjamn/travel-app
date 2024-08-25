@@ -49,10 +49,6 @@ export default {
                 // Log for debugging
                 console.log("Fetched travel data:", parsedTravelData);
 
-                // Store the parsed travel data into a component's property
-                // this.travel = parsedTravelData; 
-                // console.log(this.travel);
-
                 // Assuming you want the first entry in the "travel" array
                 if (parsedTravelData.data && parsedTravelData.data.travel && parsedTravelData.data.travel.length > 0) {
                     this.travel = parsedTravelData.data.travel[0];  // Access the first travel item
@@ -68,8 +64,7 @@ export default {
             }
 
         } else if (travelId) {
-            // If no 'travelData' is found but a 'travelId' is present, it likely means the user is navigating directly 
-            // to a URL like /travel/:id and we need to fetch the travel data based on that ID
+            // If no 'travelData' is found but a 'travelId' is present, it likely means we need to fetch the travel data based on that ID
 
             // Log the travelId for debugging purposes
             console.log("Fetching travel data using travelId:", travelId);
