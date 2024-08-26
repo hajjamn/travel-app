@@ -23,3 +23,7 @@ a {
   background-color: var(--brand-color) !important;
   color: white !important;
 }
+
+.btn-brand:hover {
+  background-color: var(--brand-color-lighter);
+}
