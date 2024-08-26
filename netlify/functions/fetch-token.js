@@ -1,6 +1,6 @@
 import { withAuth } from "./middleware";
 
-const yourFunction = async (event, context) => {
+const fetchToken = async (event, context) => {
   const user = event.user; // This user object is added by the middleware after JWT verification
 
   // Your function logic goes here
@@ -13,4 +13,4 @@ const yourFunction = async (event, context) => {
   };
 };
 
-export const handler = withAuth(yourFunction);
+export const handler = withAuth(fetchToken);
