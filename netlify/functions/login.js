@@ -70,7 +70,7 @@ const handler = async function (event, context) {
 
     // Create a token
     const token = jwt.sign(
-      { email: user.email, name: user.name },
+      { email: user.email, name: user.username },
       process.env.MY_SECRET,
       {
         expiresIn: "24h",

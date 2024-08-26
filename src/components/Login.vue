@@ -6,6 +6,10 @@ export default {
         email: "",
         password: "",
       },
+      userLog: {
+        username: "",
+        email: "",
+      },
       showErrorAlert: false,
     };
   },
@@ -18,6 +22,27 @@ export default {
         .then((response) => {
           // Print response in the console
           console.log(response.headers);
+          if (response.data.message === "Login successful") {
+            // Navigate to another page, e.g., a dashboard
+            this.$router.push("/dashboard");
+          }
+        })
+        .catch((error) => {
+          // Show error alert on UI
+          this.showErrorAlert = error.response.data.showErrorAlert;
+          console.error(
+            "Error:",
+            error.response ? error.response.data : error.message
+          );
+        });
+    },
+    login() {
+      this.$axios
+        .get("fetch-token")
+        .then((response) => {
+          // Print response in the console
+          console.log(response);
+          this.userLog.username = response.data.user.name;
           if (response.data.message === "Login successful") {
             // Navigate to another page, e.g., a dashboard
             this.$router.push("/dashboard");
@@ -53,6 +78,8 @@ export default {
   <div>
     <button @click="query(user)">Test</button>
   </div>
+  <button @click="login()">Login test</button>
+  <h1>{{ userLog.username }}</h1>
 </template>
 
 <style lang="scss" scoped></style>
