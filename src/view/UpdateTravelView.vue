@@ -1,114 +1,105 @@
-<template>
-    <h2>Update Travel Information</h2>
-    <div v-if="travel">
-        <form action="/.netlify/functions/update" method="POST" @submit.prevent="submitForm">
-            <!-- Hidden field to store travel ID -->
-            <input type="hidden" name="travel_id" :value="travel._id">
-
-            <label for="destination">Destination:</label>
-            <input type="text" v-model="travel.destination" name="destination" id="destination" required><br><br>
-
-            <label for="start_date">Start Date:</label>
-            <input type="date" v-model="travel.start_date" name="start_date" id="start_date" required><br><br>
-
-            <label for="end_date">End Date:</label>
-            <input type="date" v-model="travel.end_date" name="end_date" id="end_date" required><br><br>
-            <button type="submit">Update</button>
-        </form>
-        <h1>Inizio: {{ travel.destination || 'No destination available' }}</h1>
-    </div>
-    <div v-else>
-        <h3>Travel is loading...</h3>
-    </div>
-
-</template>
-
 <script>
-
 export default {
-    name: 'UpdateTravel',
-    props: ['id'],
-    data() {
-        return {
-            travel: null, // Holds travel data once it's available
-            travelId: this.$route.params.id, // Retrieve travelId from route params
-            responseData: Object // Unused for now, but you can use it for additional server responses
-        };
-    },
-    created() {
-        // Check if travelData is available via query string in the route
-        const travelData = this.$route.query.travelData;
-        console.log('Raw travelData from query:', travelData);
-        const travelId = this.$route.params.id;
-        console.log('Route params:', this.$route.params);
-        if (travelData) {
-            try {
-                // If 'travelData' exists, try parsing it from a JSON string into an actual object
-                const parsedTravelData = JSON.parse(travelData);
+  name: "UpdateTravel",
+  props: ["id"],
+  data() {
+    return {
+      travel: null, // Holds travel data once it's available
+    };
+  },
+  created() {
+    // Retrieve the travel data string from the route query parameters
+    const travelDataString = this.$route.query.travelData;
+    console.log("Raw travel data from query string:", travelDataString);
 
-                // Log for debugging
-                console.log("Fetched travel data:", parsedTravelData);
+    if (travelDataString) {
+      try {
+        // Parse the JSON string into an actual JavaScript object
+        const travelData = JSON.parse(travelDataString);
 
-                // Assuming you want the first entry in the "travel" array
-                if (parsedTravelData.data && parsedTravelData.data.travel && parsedTravelData.data.travel.length > 0) {
-                    this.travel = parsedTravelData.data.travel[0];  // Access the first travel item
-                    console.log("Fetched travel data:", this.travel);
+        // Log the parsed object for debugging
+        console.log("Parsed travel data object:", travelData);
 
-                } else {
-                    console.error("Travel data is missing in the response.");
-                }
+        // Now, safely access travel ID
+        const travelId = travelData.data.travel[0]._id;
+        console.log("Travel ID:", travelId);
 
-            } catch (error) {
-                // If parsing fails (e.g., if 'travelData' is not valid JSON), log an error to the console
-                console.error("Error parsing travel data:", error);
-            }
-
-        } else if (travelId) {
-            // If no 'travelData' is found but a 'travelId' is present, it likely means we need to fetch the travel data based on that ID
-
-            // Log the travelId for debugging purposes
-            console.log("Fetching travel data using travelId:", travelId);
-
-            // Call a method to fetch the travel data from a server using 'travelId'
-            this.fetchTravel(travelId);
-
+        // Assuming you want the first entry in the "travel" array
+        if (
+          travelData.data &&
+          travelData.data.travel &&
+          travelData.data.travel.length > 0
+        ) {
+          this.travel = travelData.data.travel[0]; // Access the first travel item
+          console.log("Fetched travel data:", this.travel);
         } else {
-            // If neither 'travelData' and 'travelId' is found, log an error indicating there's no relevant data to work with
-            console.error("No travel data or travelId found.");
+          console.error("Travel data is missing in the response.");
         }
-    },
-    methods: {
-        async submitForm() {
-            try {
-                console.log('Submitting travel data:', this.travel);
-                await this.$axios.post('update-travel', this.travel);
-                alert('Travel updated successfully!');
-
-                // After the update, navigate back to Home and refetch the data
-                this.$router.push({ name: 'home' });
-
-                // Optionally, you could emit an event to refresh data on Home
-                this.$emit('travel-updated');
-            } catch (error) {
-                console.error('Error updating travel:', error);
-                alert('Error updating travel.');
-            }
-        },
-
-        async fetchTravel(travelId) {
-            try {
-                const response = await this.$axios.get('fetch-travel', {
-                    params: { id: travelId },
-                });
-                console.log('Fetched travel data from server:', response.data);
-                this.travel = response.data; // Assign the fetched travel data to `travel`
-                console.log("Parsed travel data:", this.travel);
-            } catch (error) {
-                console.error('Error fetching travel data', error);
-            }
-        },
+      } catch (error) {
+        // If parsing fails (e.g., if 'travelData' is not valid JSON), log an error to the console
+        console.error("Error parsing travel data:", error);
+      }
     }
+  },
+  methods: {
+    async submitForm() {
+      // Removed the 'travel' parameter
+      try {
+        console.log("Submitting travel data:", this.travel);
+
+        // Assuming 'update-travel' expects POST request with travel data
+        await this.$axios.post("update-travel", this.travel);
+        alert("Travel updated successfully!");
+
+        // After the update, navigate back to Home and refetch the data
+        this.$router.push({ name: "home" });
+
+        // Optionally, you could emit an event to refresh data on Home
+        this.$emit("travel-updated");
+      } catch (error) {
+        console.error("Error updating travel:", error);
+        alert("Error updating travel.");
+      }
+    },
+  },
 };
-
-
 </script>
+
+<template>
+  <h2>Update Travel Information</h2>
+  <div v-if="travel">
+    <form @submit.prevent="submitForm">
+      <label for="destination">Destination:</label>
+      <input
+        type="text"
+        v-model="travel.destination"
+        name="destination"
+        id="destination"
+        required
+      /><br /><br />
+
+      <label for="start_date">Start Date:</label>
+      <input
+        type="date"
+        v-model="travel.start_date"
+        name="start_date"
+        id="start_date"
+        required
+      /><br /><br />
+
+      <label for="end_date">End Date:</label>
+      <input
+        type="date"
+        v-model="travel.end_date"
+        name="end_date"
+        id="end_date"
+        required
+      /><br /><br />
+      <button type="submit">Update</button>
+    </form>
+    <h1>Inizio: {{ travel.destination || "No destination available" }}</h1>
+  </div>
+  <div v-else>
+    <h3>Travel is loading...</h3>
+  </div>
+</template>

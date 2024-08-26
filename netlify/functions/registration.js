@@ -10,8 +10,6 @@ const mongoClient = new MongoClient(mongodbUri);
 const clientPromise = mongoClient.connect();
 
 const handler = async function (event, context) {
-  console.log("Function execution started");
-
   try {
     // Connect to the database
     const database = (await clientPromise).db("travel-app");

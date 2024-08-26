@@ -1,5 +1,5 @@
 <script>
-import { RouterLink } from 'vue-router';
+import { RouterLink } from "vue-router";
 
 export default {
   name: "AppContent",
@@ -51,7 +51,7 @@ export default {
             // If travel data is found, navigate to the 'updateTravelView' route.
             // Pass the travel ID via route parameters and the travel data itself via the query string.
             this.$router.push({
-              name: 'updateTravelView', // Target route name
+              name: "updateTravelView", // Target route name
               params: {
                 id: travelId, // Pass travel ID as a route parameter ( /updateTravelView/:id)
               },
@@ -70,7 +70,7 @@ export default {
 
           // Even if there's an error, navigate to the 'updateTravelView' route, passing the travel ID via route parameters
           this.$router.push({
-            name: 'updateTravelView', // Target route name
+            name: "updateTravelView", // Target route name
             params: {
               id: travelId, // Pass travel ID as a route parameter
             },
@@ -84,7 +84,7 @@ export default {
   },
   mounted() {
     this.fetchData();
-  }
+  },
 };
 </script>
 
@@ -92,15 +92,25 @@ export default {
   <main>
     <section class="h-100">
       <div class="container py-5 h-100">
-        <div class="row aling-items-center flex-column justify-content-between h-100">
+        <div
+          class="row aling-items-center flex-column justify-content-between h-100"
+        >
           <div class="col-auto text-center">
-            <h1>Your Travels! <font-awesome-icon :icon="['fab', 'vuejs']" /></h1>
+            <h1>
+              Your Travels! <font-awesome-icon :icon="['fab', 'vuejs']" />
+            </h1>
           </div>
           <div class="col-auto my-4">
-            <RouterLink to="/new-travel" class="btn btn-brand">Start a new Journey</RouterLink>
+            <RouterLink to="/new-travel" class="btn btn-brand"
+              >Start a new Journey</RouterLink
+            >
           </div>
           <div class="row text-center">
-            <div class="col-4" v-for="travel in responseData.travels" :key="travel._id">
+            <div
+              class="col-4"
+              v-for="travel in responseData.travels"
+              :key="travel._id"
+            >
               <div class="card">
                 <div class="card-header">
                   <h2>{{ travel.destination }}</h2>
@@ -109,7 +119,10 @@ export default {
                   <p>{{ travel.start_date }} / {{ travel.end_date }}</p>
                 </div>
                 <div class="card-footer">
-                  <div class="btn btn-secondary" @click="query('travels', travel._id)">
+                  <div
+                    class="btn btn-secondary"
+                    @click="query('travels', travel._id)"
+                  >
                     Edit
                   </div>
                 </div>
