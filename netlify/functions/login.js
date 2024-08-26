@@ -73,7 +73,7 @@ const handler = async function (event, context) {
       { email: user.email, name: user.name },
       process.env.MY_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "24h",
       }
     );
 
@@ -83,7 +83,10 @@ const handler = async function (event, context) {
       headers: {
         "Content-Type": "application/json",
         // Set-Cookie header for JWT (in a real application, this should be done with proper security settings)
-        "Set-Cookie": `token=${token}; HttpOnly; Max-Age=3600; Path=/`,
+        // "Set-Cookie": `token=${token}; HttpOnly; Max-Age=3600; Path=/`,
+      },
+      multiValueHeaders: {
+        "Set-Cookie": [`token=${token}; HttpOnly; Max-Age=3600; Path=/`],
       },
       body: JSON.stringify({
         message: "Login successful",

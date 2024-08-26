@@ -4,6 +4,8 @@ import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();
 
+import { withAuth } from "./middleware";
+
 //Recuperiamo l'Uri supersegreto di MongoDB e la usiamo per fare la connessione
 const mongodbUri = process.env.MONGODB_URI;
 const mongoClient = new MongoClient(mongodbUri);
@@ -11,7 +13,7 @@ const mongoClient = new MongoClient(mongodbUri);
 //Connessione al server
 const clientPromise = mongoClient.connect();
 
-const handler = async function (event, context) {
+const fetchTravel = async function (event, context) {
   console.log("Function execution started");
 
   try {
@@ -56,4 +58,4 @@ const handler = async function (event, context) {
   }
 };
 
-export { handler };
+export const handler = withAuth(fetchTravel);

@@ -1,22 +1,20 @@
+// fetchTravelData.js
 import { MongoClient, ObjectId } from "mongodb";
 import dotenv from "dotenv";
+import { withAuth } from "./middleware"; // Import the middleware wrapper
+
 dotenv.config();
 const mongodbUri = process.env.MONGODB_URI;
-
 const mongoClient = new MongoClient(mongodbUri);
-
 const clientPromise = mongoClient.connect();
 
-const handler = async function (event, context) {
+// Core function logic
+const fetchTravelData = async function (event, context) {
   console.log("Function execution started");
 
-  // Log environment variables (excluding sensitive information)
-  console.log("Environment Variables:", {
-    MONGODB_URI: process.env.MONGODB_URI ? "Set" : "Not Set",
-    MONGODB_DATABASE: "travel-app",
-  });
-
-  const travelId = event.queryStringParameters ? event.queryStringParameters.id : null;
+  const travelId = event.queryStringParameters
+    ? event.queryStringParameters.id
+    : null;
 
   try {
     const database = (await clientPromise).db("travel-app");
@@ -37,7 +35,7 @@ const handler = async function (event, context) {
       travel = await travelsCollection.findOne({ _id: new ObjectId(travelId) });
     } catch (error) {
       return {
-        statusCode: 400,  // Bad Request
+        statusCode: 400, // Bad Request
         body: JSON.stringify({
           message: "Invalid travel ID format.",
           error: error.toString(),
@@ -45,9 +43,6 @@ const handler = async function (event, context) {
       };
     }
 
-   
-
-    // Log successful database connection and query
     console.log("Successfully connected to database and retrieved results");
 
     return {
@@ -70,7 +65,6 @@ const handler = async function (event, context) {
       }),
     };
   } catch (error) {
-    // Log the error details
     console.error("Error connecting to MongoDB:", error);
     return {
       statusCode: 500,
@@ -83,4 +77,5 @@ const handler = async function (event, context) {
   }
 };
 
-export { handler };
+// Wrap the core function with authentication middleware
+export const handler = withAuth(fetchTravelData);

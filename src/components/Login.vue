@@ -17,7 +17,7 @@ export default {
         })
         .then((response) => {
           // Print response in the console
-          console.log(response.data.message);
+          console.log(response.headers);
           if (response.data.message === "Login successful") {
             // Navigate to another page, e.g., a dashboard
             this.$router.push("/dashboard");
