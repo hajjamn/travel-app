@@ -5,34 +5,23 @@ export default {
   name: "AppContent",
   data() {
     return {
-      responseData: Object,
+      responseData: {}, // Initialize as an empty object
     };
   },
   methods: {
     fetchData() {
       this.$axios
         .get("/fetch-travel-app-data")
-        //make a call to our serverless function
         .then((response) => {
-          console.log(response.data);
           this.responseData = response.data.data;
-          console.log(this.responseData);
         })
         .catch((error) => {
-          console.log(error);
+          console.error("Error fetching travel data:", error);
         });
     },
     query(collection, travelId) {
-      // 'collection' in this case is likely the name of the collection (travels),
-      // and 'travelId' is the unique identifier of the travel record (travel._id)
-
-      // Make an HTTP GET request using Axios to a serverless function ('fetch-travel')
       this.$axios
-        .get("fetch-travel", {
-          // Pass parameters in the request, including:
-          // - 'collection' (the collection name, 'travels')
-          // - 'query' (the travelId, which is likely the identifier for the specific travel entry)
-          // - 'id' (another reference to the travelId)
+        .get("/fetch-travel", {
           params: {
             collection: collection,
             query: travelId,
@@ -40,50 +29,57 @@ export default {
           },
         })
         .then((response) => {
-          // If the request is successful, log the response data to the console
-          console.log(response.data);
-
-          // Store the response data in a local constant 'travel'
           const travel = response.data;
-
-          // Check if the travel data exists
           if (travel) {
-            // If travel data is found, navigate to the 'updateTravelView' route.
-            // Pass the travel ID via route parameters and the travel data itself via the query string.
             this.$router.push({
-              name: "updateTravelView", // Target route name
+              name: "updateTravelView",
               params: {
-                id: travelId, // Pass travel ID as a route parameter ( /updateTravelView/:id)
+                id: travelId,
               },
               query: {
-                travelData: JSON.stringify(travel), // Pass the travel data as a query parameter (stringified JSON)
+                travelData: JSON.stringify(travel),
               },
             });
           } else {
-            // If no travel data is found for the given ID, log a message
             console.log(`No travel found with ID: ${travelId}`);
           }
         })
         .catch((error) => {
-          // If there's an error during the request, log the error message
-          console.log(error);
-
-          // Even if there's an error, navigate to the 'updateTravelView' route, passing the travel ID via route parameters
+          console.error("Error querying travel:", error);
+          // Redirect only if there's no critical error
           this.$router.push({
-            name: "updateTravelView", // Target route name
+            name: "updateTravelView",
             params: {
-              id: travelId, // Pass travel ID as a route parameter
+              id: travelId,
             },
           });
         });
     },
+    queryDelete(collection, travelId) {
+      this.$axios
+        .get("/delete-travel", {
+          params: {
+            collection: collection,
+            query: travelId,
+            id: travelId, // Ensure this matches what your server expects
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data.message) {
+            alert(response.data.message);
+          }
+        })
+        .catch((error) => {
+          console.error(
+            "Error deleting travel:",
+            error.response ? error.response.data : error.message
+          );
+        });
+    },
   },
   created() {
-    //when app is created prints the results from calling the fetchData function
-    this.fetchData();
-  },
-  mounted() {
-    this.fetchData();
+    this.fetchData(); // Only call once in created
   },
 };
 </script>
@@ -93,7 +89,7 @@ export default {
     <section class="h-100">
       <div class="container py-5 h-100">
         <div
-          class="row aling-items-center flex-column justify-content-between h-100"
+          class="row align-items-center flex-column justify-content-between h-100"
         >
           <div class="col-auto text-center">
             <h1>
@@ -101,9 +97,9 @@ export default {
             </h1>
           </div>
           <div class="col-auto my-4">
-            <RouterLink to="/new-travel" class="btn btn-brand"
-              >Start a new Journey</RouterLink
-            >
+            <RouterLink to="/new-travel" class="btn btn-brand">
+              Start a new Journey
+            </RouterLink>
           </div>
           <div class="row text-center">
             <div
@@ -119,12 +115,18 @@ export default {
                   <p>{{ travel.start_date }} / {{ travel.end_date }}</p>
                 </div>
                 <div class="card-footer">
-                  <div
+                  <button
                     class="btn btn-secondary"
                     @click="query('travels', travel._id)"
                   >
                     Edit
-                  </div>
+                  </button>
+                  <button
+                    class="btn btn-warning"
+                    @click="queryDelete('travels', travel._id)"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>
@@ -135,4 +137,6 @@ export default {
   </main>
 </template>
 
-<style></style>
+<style>
+/* Add your styles here */
+</style>
