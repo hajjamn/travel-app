@@ -1,5 +1,5 @@
 //Importiamo MongoClient che ci permette di usare i driver per "parlare la stessa lingua" di MongoDB
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 //Importiamo dotenv per usare le variabili nel file .env in ambiente di sviluppo
 import dotenv from "dotenv";
 dotenv.config();
@@ -21,16 +21,45 @@ const fetchTravel = async function (event, context) {
 
     //Estraiamo i parametri dall'evento. In netlify si fa cosi
     const collection = event.queryStringParameters.collection;
-    const query = event.queryStringParameters.query;
+    const queryId = event.queryStringParameters.id;
+
+    if (!collection || !queryId) {
+      throw new Error("Missing collection or id parameter");
+    }
 
     //Ci colleghiamo a quella collection
     const queryCollection = database.collection(collection);
 
-    const travel = await queryCollection.find({ _id: query }).toArray();
+    // Check if queryId is a valid ObjectId
+    let objectId;
+    try {
+      objectId = new ObjectId(queryId);
+    } catch (err) {
+      throw new Error("Invalid ObjectId format.");
+    }
+
+    // Ensure 'queryId' is a valid ObjectId
+    // const objectId = new ObjectId(queryId);
+
+    // const travel = await queryCollection.find({ _id: query }).toArray();
+
+     // Retrieve and log the ID from query parameters
+     const travelId = event.queryStringParameters.id;
+     console.log("Querying for travel ID:", travelId);
+ 
+     // Fetch the document with the provided ID
+     const travel = await queryCollection.findOne({ _id: objectId });
+     console.log("Fetched travel document:", travel);
+
+    
+
+    if (!travel) {
+      throw new Error("No travel record found with the provided ID.");
+    }
 
     //Adesso recuperiamo anche tutti i giorni dalla collection days che hanno a travel_id l'id della query
     const daysCollection = database.collection("days");
-    const days = await daysCollection.find({ "travel_id": query }).toArray();
+    const days = await daysCollection.find({ "travel_id": queryId }).toArray();
 
     // Log successful database connection and query
     console.log("Successfully connected to database and retrieved results");

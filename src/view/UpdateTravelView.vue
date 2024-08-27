@@ -4,11 +4,7 @@ export default {
   props: ["id"],
   data() {
     return {
-      travel: {
-        destination: '',
-        start_date: '',
-        end_date: ''
-      }, // Holds travel data once it's available
+      travel: null, // Holds travel data once it's available
     };
   },
   created() {
@@ -20,25 +16,27 @@ export default {
       try {
         // Parse the JSON string into an actual JavaScript object
         const travelData = JSON.parse(travelDataString);
+        this.travel = travelData.data.travel;
+        console.log(this.travel);
 
         // Log the parsed object for debugging
         console.log("Parsed travel data object:", travelData);
 
         // Now, safely access travel ID
-        const travelId = travelData.data.travel[0]._id;
-        console.log("Travel ID:", travelId);
+        // const travelId = travelData.data.travel[0]._id;
+        // console.log("Travel ID:", travelId);
 
         // Assuming you want the first entry in the "travel" array
-        if (
-          travelData.data &&
-          travelData.data.travel &&
-          travelData.data.travel.length > 0
-        ) {
-          this.travel = travelData.data.travel[0]; // Access the first travel item
-          console.log("Fetched travel data:", this.travel);
-        } else {
-          console.error("Travel data is missing in the response.");
-        }
+        // if (
+        //   travelData.data &&
+        //   travelData.data.travel &&
+        //   travelData.data.travel.length > 0
+        // ) {
+        //   this.travel = travelData.data.travel[0]; // Access the first travel item
+        //   console.log("Fetched travel data:", this.travel);
+        // } else {
+        //   console.error("Travel data is missing in the response.");
+        // }
       } catch (error) {
         // If parsing fails (e.g., if 'travelData' is not valid JSON), log an error to the console
         console.error("Error parsing travel data:", error);
