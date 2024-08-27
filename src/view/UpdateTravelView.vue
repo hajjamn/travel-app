@@ -4,7 +4,11 @@ export default {
   props: ["id"],
   data() {
     return {
-      travel: null, // Holds travel data once it's available
+      travel: {
+        destination: '',
+        start_date: '',
+        end_date: ''
+      }, // Holds travel data once it's available
     };
   },
   created() {
@@ -48,7 +52,11 @@ export default {
         console.log("Submitting travel data:", this.travel);
 
         // Assuming 'update-travel' expects POST request with travel data
-        await this.$axios.post("update-travel", this.travel);
+        await this.$axios.post("update-travel", { travel: this.travel }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
         alert("Travel updated successfully!");
 
         // After the update, navigate back to Home and refetch the data
@@ -68,33 +76,15 @@ export default {
 <template>
   <h2>Update Travel Information</h2>
   <div v-if="travel">
-    <form @submit.prevent="submitForm">
+    <form @submit.prevent="submitForm" method="POST">
       <label for="destination">Destination:</label>
-      <input
-        type="text"
-        v-model="travel.destination"
-        name="destination"
-        id="destination"
-        required
-      /><br /><br />
+      <input type="text" v-model="travel.destination" name="destination" id="destination" required /><br /><br />
 
       <label for="start_date">Start Date:</label>
-      <input
-        type="date"
-        v-model="travel.start_date"
-        name="start_date"
-        id="start_date"
-        required
-      /><br /><br />
+      <input type="date" v-model="travel.start_date" name="start_date" id="start_date" required /><br /><br />
 
       <label for="end_date">End Date:</label>
-      <input
-        type="date"
-        v-model="travel.end_date"
-        name="end_date"
-        id="end_date"
-        required
-      /><br /><br />
+      <input type="date" v-model="travel.end_date" name="end_date" id="end_date" required /><br /><br />
       <button type="submit">Update</button>
     </form>
     <h1>Inizio: {{ travel.destination || "No destination available" }}</h1>
