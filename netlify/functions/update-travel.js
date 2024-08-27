@@ -51,7 +51,7 @@ const handler = async (event, context) => {
     }
 
    // removed validation of objectId and pass it like a normal string
-    const queryTravel = { _id: travel_id };  // Use travel_id as a string directly
+    const queryTravel = { _id: new ObjectId(travel_id) };  // Use travel_id as a string directly
 
     // Define the MongoDB update queries
     const updateTravel = {
