@@ -50,19 +50,10 @@ const handler = async (event, context) => {
       };
     }
 
-    // Ensure travel_id is a valid MongoDB ObjectId
-    if (!ObjectId.isValid(travel_id)) {
-      return {
-        statusCode: 400,
-        body: `<h1>Invalid Travel ID</h1><p>The provided travel ID is not valid.</p>`,
-        headers: {
-          "Content-Type": "text/html",
-        },
-      };
-    }
+   // removed validation of objectId and pass it like a normal string
+    const queryTravel = { _id: travel_id };  // Use travel_id as a string directly
 
     // Define the MongoDB update queries
-    const queryTravel = { _id: new ObjectId(travel_id) }; // Convert to ObjectId
     const updateTravel = {
       $set: {
         destination: destination,
@@ -83,26 +74,27 @@ const handler = async (event, context) => {
     if (updatedTravel.modifiedCount > 0) {
       return {
         statusCode: 200,
-        body: `<h1>Update Successful</h1><p>Travel details updated successfully.</p>`,
+        body: JSON.stringify({ message: "Travel details updated successfully." }),
         headers: {
-          "Content-Type": "text/html",
+          "Content-Type": "application/json",
         },
       };
     } else {
       return {
         statusCode: 404,
-        body: `<h1>Update Failed</h1><p>No travel record found with the provided ID.</p>`,
+        body: JSON.stringify({ message: "No travel record found with the provided ID." }),
         headers: {
-          "Content-Type": "text/html",
+          "Content-Type": "application/json",
         },
       };
     }
   } catch (error) {
+    console.error("Error updating travel:", error);  // Log the error
     return {
       statusCode: 500,
-      body: `<h1>Update Failed</h1><p>${error.toString()}</p>`,
+      body: JSON.stringify({ message: `Update failed: ${error.message}` }), // Return more specific error details
       headers: {
-        "Content-Type": "text/html",
+        "Content-Type": "application/json",
       },
     };
   }
