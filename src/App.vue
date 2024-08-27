@@ -13,14 +13,39 @@ export default {
   data() {
     return {
       store,
+      userLog: {
+        username: "",
+        email: "",
+      },
     };
+  },
+  created() {
+    this.$axios
+      .get("fetch-token")
+      .then((response) => {
+        // Print response in the console
+        console.log(response);
+        this.userLog.username = response.data.user.name;
+        if (response.data.message === "Login successful") {
+          // Navigate to another page, e.g., a dashboard
+          // this.$router.push("/dashboard");
+        }
+      })
+      .catch((error) => {
+        // Show error alert on UI
+        this.showErrorAlert = error.response.data.showErrorAlert;
+        console.error(
+          "Error:",
+          error.response ? error.response.data : error.message
+        );
+      });
   },
 };
 </script>
 
 <template>
   <div id="app">
-    <AppHeader></AppHeader>
+    <AppHeader :name="userLog.username" :email="userLog.email"></AppHeader>
     <AppContent></AppContent>
     <AppFooter></AppFooter>
   </div>

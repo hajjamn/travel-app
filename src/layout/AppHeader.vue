@@ -1,3 +1,11 @@
+<script>
+export default {
+  props: ["name", "email"],
+  data() {
+    return {};
+  },
+};
+</script>
 <template>
   <header>
     <section>
