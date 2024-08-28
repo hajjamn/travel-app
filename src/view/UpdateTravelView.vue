@@ -85,7 +85,7 @@ export default {
       <input type="date" v-model="travel.end_date" name="end_date" id="end_date" required /><br /><br />
       <button type="submit">Update</button>
     </form>
-    <h1>Inizio: {{ travel.destination || "No destination available" }}</h1>
+    <h1>Start: {{ travel.destination || "No destination available" }}</h1>
   </div>
   <div v-else>
     <h3>Travel is loading...</h3>
