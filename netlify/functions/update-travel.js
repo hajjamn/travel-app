@@ -1,5 +1,6 @@
 // Import MongoClient to use the drivers to "speak the same language" as MongoDB
 import { MongoClient, ObjectId } from "mongodb"; // Use ObjectId instead of BSON directly
+import { withAuth } from "./middleware";
 
 // Import dotenv to use the variables in the .env file in the development environment
 import dotenv from "dotenv";
