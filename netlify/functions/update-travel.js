@@ -15,7 +15,7 @@ const mongoClient = new MongoClient(mongodbUri, {
 // Connect to the server
 const clientPromise = mongoClient.connect();
 
-const handler = async (event, context) => {
+const updateTravel = async function (event, context) {
   try {
     // Connect to the database
     const database = (await clientPromise).db("travel-app");
@@ -50,8 +50,8 @@ const handler = async (event, context) => {
       };
     }
 
-   // removed validation of objectId and pass it like a normal string
-    const queryTravel = { _id: new ObjectId(travel_id) };  // Use travel_id as a string directly
+    // removed validation of objectId and pass it like a normal string
+    const queryTravel = { _id: new ObjectId(travel_id) }; // Use travel_id as a string directly
 
     // Define the MongoDB update queries
     const updateTravel = {
@@ -74,7 +74,9 @@ const handler = async (event, context) => {
     if (updatedTravel.modifiedCount > 0) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: "Travel details updated successfully." }),
+        body: JSON.stringify({
+          message: "Travel details updated successfully.",
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -82,14 +84,16 @@ const handler = async (event, context) => {
     } else {
       return {
         statusCode: 404,
-        body: JSON.stringify({ message: "No travel record found with the provided ID." }),
+        body: JSON.stringify({
+          message: "No travel record found with the provided ID.",
+        }),
         headers: {
           "Content-Type": "application/json",
         },
       };
     }
   } catch (error) {
-    console.error("Error updating travel:", error);  // Log the error
+    console.error("Error updating travel:", error); // Log the error
     return {
       statusCode: 500,
       body: JSON.stringify({ message: `Update failed: ${error.message}` }), // Return more specific error details
@@ -101,4 +105,4 @@ const handler = async (event, context) => {
 };
 
 // Export the handler for Netlify
-export { handler };
+export const handler = withAuth(updateTravel);

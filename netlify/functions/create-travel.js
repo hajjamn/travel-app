@@ -1,5 +1,6 @@
 //Importiamo MongoClient che ci permette di usare i driver per "parlare la stessa lingua" di MongoDB. ObjectId ci fa creare gli id
 import { MongoClient, ObjectId } from "mongodb";
+import { withAuth } from "./middleware";
 
 //Importiamo dotenv per usare le variabili nel file .env in ambiente di sviluppo
 import dotenv from "dotenv";
@@ -14,16 +15,17 @@ const clientPromise = mongoClient.connect();
 
 //Funzione per generare il l'id da assegnare al travel e poterlo poi assegnare al travel_id dei vari giorni
 const generateUniqueObjectId = async (database, collection) => {
-
   let uniqueId;
   let isUnique = false;
 
   //Finche' il valore isUnique e' false
   while (!isUnique) {
-    uniqueId = new ObjectId();//genera un nuovo oggetto
+    uniqueId = new ObjectId(); //genera un nuovo oggetto
 
     // Controlliamo se uniqueId esiste gia' nella collection travels
-    const existingTravel = await database.collection(collection).findOne({ _id: uniqueId });
+    const existingTravel = await database
+      .collection(collection)
+      .findOne({ _id: uniqueId });
 
     if (!existingTravel) {
       isUnique = true; // Se non trova nulla, isUnique diventa true e il ciclo termina
@@ -34,8 +36,7 @@ const generateUniqueObjectId = async (database, collection) => {
   return uniqueId;
 };
 
-
-const handler = async function (event, context) {
+const createTravel = async function (event, context) {
   console.log("Function execution started");
   try {
     const database = (await clientPromise).db("travel-app");
@@ -45,9 +46,8 @@ const handler = async function (event, context) {
     const start_date = event.queryStringParameters.start_date;
     const end_date = event.queryStringParameters.end_date;
 
-
     //Generiamo un id unico con la funzione creata sopra
-    const travelId = await generateUniqueObjectId(database, 'travels');
+    const travelId = await generateUniqueObjectId(database, "travels");
 
     //Usiamo dati statici e l'ID generato per creare un travel
     const newTravel = {
@@ -59,8 +59,10 @@ const handler = async function (event, context) {
     };
 
     //Inseriamo il viaggio nella collection
-    const insertedTravel = await database.collection("travels").insertOne(newTravel);
-    console.log("Travel inserted: ", insertedTravel)
+    const insertedTravel = await database
+      .collection("travels")
+      .insertOne(newTravel);
+    console.log("Travel inserted: ", insertedTravel);
 
     // Parsiamo start_date ed end_date cosi' invece di stringhe sono date
     const startDate = new Date(newTravel.start_date);
@@ -71,9 +73,8 @@ const handler = async function (event, context) {
 
     // Cicliamo ogni data da start date a End date. Sembra brutto ma e' leggibile
     for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-
       //creiamo un ID per il giorno
-      const dayId = await generateUniqueObjectId(database, 'days');
+      const dayId = await generateUniqueObjectId(database, "days");
 
       // Creiamo un oggetto per questa data
       const newDay = {
@@ -88,19 +89,17 @@ const handler = async function (event, context) {
 
     // Inseriamo tutti gli oggetti nell'array nella collection
     const insertedDays = await database.collection("days").insertMany(days);
-    console.log("Days inserted: ", insertedDays)
-
+    console.log("Days inserted: ", insertedDays);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         data: {
           insertedTravel,
-          insertedDays
+          insertedDays,
         },
       }),
     };
-
   } catch (error) {
     // Log the error details
     console.error("Error connecting to MongoDB:", error);
@@ -115,4 +114,4 @@ const handler = async function (event, context) {
   }
 };
 
-export { handler };
+export const handler = withAuth(createTravel);

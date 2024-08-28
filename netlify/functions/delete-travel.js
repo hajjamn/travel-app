@@ -1,4 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb"; // Import ObjectId from mongodb
+import { withAuth } from "./middleware";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -10,7 +11,7 @@ const mongoClient = new MongoClient(mongodbUri, {
 
 const clientPromise = mongoClient.connect();
 
-const handler = async (event, context) => {
+const deleteTravel = async function (event, context) {
   try {
     // Connect to the database
     const database = (await clientPromise).db("travel-app");
@@ -79,4 +80,4 @@ const handler = async (event, context) => {
   }
 };
 
-export { handler };
+export const handler = withAuth(deleteTravel);
