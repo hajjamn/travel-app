@@ -32,14 +32,6 @@ export default {
                 <font-awesome-icon :icon="['fas', 'bars']" />
               </button>
               <ul class="dropdown-menu">
-<<<<<<< HEAD
-                <li>
-                  <RouterLink to="/login" class="dropdown-item">Login</RouterLink>
-                </li>
-                <li>
-                  <RouterLink to="/registration" class="dropdown-item">Registration</RouterLink>
-                </li>
-=======
                 <template v-if="name && email">
                   <li>
                     <div class="dropdown-item name-dropdown">Hi <strong>{{ name }}</strong>!</div>
@@ -56,7 +48,6 @@ export default {
                     <RouterLink to="/registration" class="dropdown-item">Registration</RouterLink>
                   </li>
                 </template>
->>>>>>> fix-header
               </ul>
             </div>
           </div>
