@@ -29,7 +29,7 @@ export default {
         this.userLog.email = response.data.user.email;
         if (response.data.message === "Login successful") {
           // Navigate to another page, e.g., a dashboard
-          // this.$router.push("/dashboard");
+          this.$router.push("Home");
         }
       })
       .catch((error) => {

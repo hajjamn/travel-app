@@ -39,7 +39,7 @@ export default {
       try {
         await this.$axios.post("/logout");
         this.userLog.username = "";
-        // location.reload();
+        location.reload();
       } catch (error) {
         console.error(
           "Error during logout:",
@@ -62,6 +62,7 @@ export default {
                 // Print response in the console
                 // console.log(response);
                 this.userLog.username = response.data.user.name;
+                location.reload();
                 if (response.data.message === "Login successful") {
                   // Navigate to another page, e.g., a dashboard
                   // this.$router.push("/dashboard");

@@ -10,6 +10,19 @@ export default {
       default: "",
     },
   },
+  methods: {
+    async logout() {
+      try {
+        await this.$axios.post("/logout");
+        location.reload();
+      } catch (error) {
+        console.error(
+          "Error during logout:",
+          error.response ? error.response.data : error.message
+        );
+      }
+    },
+  },
 };
 </script>
 
@@ -51,6 +64,11 @@ export default {
                   </li>
                   <li>
                     <div class="dropdown-item email-dropdown">{{ email }}</div>
+                  </li>
+                  <li>
+                    <button class="btn btn-brand mt-3" @click="logout">
+                      Logout
+                    </button>
                   </li>
                 </template>
                 <template v-else>
