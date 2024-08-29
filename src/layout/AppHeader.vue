@@ -24,24 +24,16 @@ export default {
           <div class="col-auto">
             <!-- Il menu fa casino. Andrebbe fatto custom su js. Poi lo faro' -->
             <div class="dropdown">
-              <button
-                class="btn btn-transparent dropdown-toggle custom-dropdown-toggle me-5"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
+              <button class="btn btn-transparent dropdown-toggle custom-dropdown-toggle me-5" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <font-awesome-icon :icon="['fas', 'bars']" />
               </button>
               <ul class="dropdown-menu">
                 <li>
-                  <RouterLink to="/login" class="dropdown-item"
-                    >Login</RouterLink
-                  >
+                  <RouterLink to="/login" class="dropdown-item">Login</RouterLink>
                 </li>
                 <li>
-                  <RouterLink to="/registration" class="dropdown-item"
-                    >Registration</RouterLink
-                  >
+                  <RouterLink to="/registration" class="dropdown-item">Registration</RouterLink>
                 </li>
               </ul>
             </div>

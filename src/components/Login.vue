@@ -82,28 +82,26 @@ export default {
 };
 </script>
 <template>
-  <div v-if="userLog.username === ''">
-    <h1>Login</h1>
-    <h2 v-if="showErrorAlert">ERRORE</h2>
-    <form @submit.prevent="query(user)">
-      <label for="email">Your email</label>
-      <input
-        type="email"
-        id="email"
-        v-model="user.email"
-        placeholder="your@email.com"
-      /><br />
-      <label for="password">Password</label>
-      <input type="password" id="password" v-model="user.password" /><br />
-      <input type="submit" value="Submit" />
-    </form>
+  <div class="container">
+    <div v-if="userLog.username === ''">
+      <h1>Login</h1>
+      <h2 v-if="showErrorAlert">ERRORE</h2>
+      <form @submit.prevent="query(user)">
+        <label for="email">Your email</label>
+        <input type="email" id="email" v-model="user.email" placeholder="your@email.com" /><br />
+        <label for="password">Password</label>
+        <input type="password" id="password" v-model="user.password" /><br />
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
   </div>
   <!-- <div>
     <button @click="query(user)">Test</button>
   </div> -->
-
-  <h1>your username: {{ userLog.username }}</h1>
-  <button>Logout da fare</button>
+  <div class="container text-center py-5">
+    <h1>Your username: {{ userLog.username }}</h1>
+    <button class="btn btn-brand mt-3">Logout da fare</button>
+  </div>
 </template>
 
 <style lang="scss" scoped></style>
