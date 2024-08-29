@@ -53,7 +53,6 @@ export default {
                 if (response.data.message === "Login successful") {
                   // Navigate to another page, e.g., a dashboard
                   // this.$router.push("/dashboard");
-                  location.reload();
                 }
               })
               .catch((error) => {
