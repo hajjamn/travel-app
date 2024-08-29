@@ -94,20 +94,30 @@ export default {
 </script>
 <template>
   <div v-if="userLog.username === ''">
-    <h1>Login</h1>
-    <h2 v-if="showErrorAlert">ERRORE</h2>
-    <form @submit.prevent="query(user)">
-      <label for="email">Your email</label>
-      <input
-        type="email"
-        id="email"
-        v-model="user.email"
-        placeholder="your@email.com"
-      /><br />
-      <label for="password">Password</label>
-      <input type="password" id="password" v-model="user.password" /><br />
-      <input type="submit" value="Submit" />
-    </form>
+    <div class="container py-5">
+      <div class="row flex-column align-items-center justify-content-center">
+        <div class="col-auto text-center">
+          <h1>Login</h1>
+        </div>
+        <div class="col-auto text-center">
+          <h2 v-if="showErrorAlert">ERRORE</h2>
+        </div>
+        <form @submit.prevent="query(user)">
+          <div class="col-auto text-center mt-3">
+            <label for="email" class="d-block">Your email</label>
+            <input type="email" id="email" v-model="user.email" placeholder="your@email.com" /><br />
+          </div>
+          <div class="col-auto text-center mt-3">
+            <label for="password" class="d-block">Password</label>
+            <input type="password" id="password" v-model="user.password" /><br />
+          </div>
+          <div class="col-auto text-center mt-4">
+            <input class="btn btn-brand" type="submit" value="Submit" />
+          </div>
+        </form>
+
+      </div>
+    </div>
   </div>
   <div v-else>
     <span class="fs-4">You are logged in as {{ userLog.username }}!</span>
