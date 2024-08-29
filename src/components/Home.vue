@@ -6,6 +6,7 @@ export default {
   data() {
     return {
       responseData: {}, // Initialize as an empty object
+      today: new Date()
     };
   },
   methods: {
@@ -13,7 +14,12 @@ export default {
       this.$axios
         .get("/fetch-travel-app-data")
         .then((response) => {
+          // Assuming the date format in the response is 'YYYY-MM-DD'
           this.responseData = response.data.data;
+          this.responseData.travels.forEach(travel => {
+            const startDate = new Date(travel.start_date);
+            travel.daysUntilStart = Math.ceil((startDate - this.today) / (1000 * 60 * 60 * 24));
+          });
         })
         .catch((error) => {
           console.error("Error fetching travel data:", error);
@@ -88,47 +94,39 @@ export default {
   <main>
     <section class="h-100">
       <div class="container py-5 h-100">
-        <div
-          class="row align-items-center flex-column justify-content-between h-100"
-        >
+        <div class="row align-items-center flex-column justify-content-between h-100">
           <div class="col-auto text-center">
-            <h1>
-              Your Travels! <font-awesome-icon :icon="['fab', 'vuejs']" />
-            </h1>
-          </div>
-          <div class="col-auto my-4">
-            <RouterLink to="/new-travel" class="btn btn-brand">
-              Start a new Journey
-            </RouterLink>
+            <h3 class="text-start align-self-start">
+              Here is your planned vacay:
+            </h3>
           </div>
           <div class="row text-center">
-            <div
-              class="col-4"
-              v-for="travel in responseData.travels"
-              :key="travel._id"
-            >
-              <div class="card">
-                <div class="card-header">
+            <div class="col-12 mb-3" v-for="travel in responseData.travels" :key="travel._id">
+              <div class="card my-card">
+                <div class="card-header my-card-header-future">
                   <h2>{{ travel.destination }}</h2>
+                  <font-awesome-icon class="fs-3" :icon="['fas', 'gear']" />
                 </div>
-                <div class="card-body">
-                  <p>{{ travel.start_date }} / {{ travel.end_date }}</p>
+                <div class="card-body my-card-body text-start">
+                  <p><em>{{ travel.start_date }} - {{ travel.end_date }}</em></p>
+                  <p>Start in <strong>{{ travel.daysUntilStart }}</strong> days</p>
+                  <p>Budget <strong>{{ travel.budget }}</strong></p>
                 </div>
-                <div class="card-footer">
-                  <button
-                    class="btn btn-secondary"
-                    @click="query('travels', travel._id)"
-                  >
+                <!-- Questi dovrebbero uscire dall'ingranaggio -->
+                <!-- <div class="card-footer">
+                  <button class="btn btn-secondary" @click="query('travels', travel._id)">
                     Edit
                   </button>
-                  <button
-                    class="btn btn-warning"
-                    @click="queryDelete('travels', travel._id)"
-                  >
+                  <button class="btn btn-warning" @click="queryDelete('travels', travel._id)">
                     Delete
                   </button>
-                </div>
+                </div> -->
               </div>
+            </div>
+            <div class="col-auto m-auto">
+              <RouterLink to="/new-travel" class="btn btn-add">
+                <font-awesome-icon :icon="['fas', 'plus']" />
+              </RouterLink>
             </div>
           </div>
         </div>

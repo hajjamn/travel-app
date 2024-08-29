@@ -19,6 +19,8 @@ a {
   text-decoration: none;
 }
 
+/* BOTTONI */
+
 .btn-brand {
   background-color: var(--brand-color) !important;
   color: white !important;
@@ -26,4 +28,58 @@ a {
 
 .btn-brand:hover {
   background-color: var(--brand-color-lighter) !important;
+}
+
+.btn-brand-inverted {
+  background-color: white;
+  color: var(--brand-color);
+}
+
+.btn-brand-inverted:hover {
+  background-color: var(--brand-color-lighter);
+  color: white;
+}
+
+.btn-add {
+  color: var(--brand-color) !important;
+  background-color: var(--neutral-gray) !important;
+  border-radius: 100% !important;
+}
+
+btn-add:hover {
+  color: var(--brand-color-lighter) !important;
+}
+
+/* CARD NOSTRE */
+
+.my-card {
+  border: none !important;
+}
+
+.my-card-header-future {
+  background-color: #2D2D2D !important;
+  color: white !important;
+  border-top-left-radius: 20px !important;
+  border-top-right-radius: 20px !important;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.my-card-header-past {
+  background-color: #9D9D9D !important;
+  color: white;
+  border-top-left-radius: 20px !important;
+  border-top-right-radius: 20px !important;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.my-card-body {
+  background-color: var(--neutral-gray);
+  border-bottom-left-radius: 20px !important;
+  border-bottom-right-radius: 20px !important;
 }

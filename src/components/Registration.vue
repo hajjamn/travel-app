@@ -35,30 +35,34 @@ export default {
 </script>
 
 <template>
-  <h1>Ciao</h1>
-  <h2 v-if="showErrorAlert">ERRORE</h2>
-  <form @submit.prevent="query(newUser)">
-    <label for="email">Your email</label>
-    <input
-      type="email"
-      id="email"
-      v-model="newUser.email"
-      placeholder="your@email.com"
-    /><br />
-    <label for="username">Username</label>
-    <input
-      type="text"
-      id="username"
-      v-model="newUser.username"
-      placeholder="user"
-    /><br />
-    <label for="password">Password</label>
-    <input type="password" id="password" v-model="newUser.password" /><br />
-    <input type="submit" value="Submit" />
-  </form>
-  <div>
-    <button @click="query(newUser)">Test</button>
-  </div>
+  <section>
+    <div class="container">
+      <div class="row flex-column justify-content-center align-items-center text-center">
+        <h1>Ciao</h1>
+        <h2 v-if="showErrorAlert">ERRORE</h2>
+        <form @submit.prevent="query(newUser)" class="d-flex flex-column justify-content-center align-items-center">
+          <div class="col-6 mb-3">
+            <label for="email" class="d-block">Your email</label>
+            <input type="email" id="email" v-model="newUser.email" placeholder="your@email.com" /><br />
+          </div>
+          <div class="col-6 mb-3">
+            <label for="username" class="d-block">Username</label>
+            <input type="text" id="username" v-model="newUser.username" placeholder="user" /><br />
+          </div>
+          <div class="col-6 mb-3">
+            <label for="password" class="d-block">Password</label>
+            <input type="password" id="password" v-model="newUser.password" /><br />
+          </div>
+
+
+          <input type="submit" value="Submit" />
+        </form>
+        <!-- <div>
+          <button @click="query(newUser)">Test</button>
+        </div> -->
+      </div>
+    </div>
+  </section>
 </template>
 
 <style lang="scss" scoped></style>
