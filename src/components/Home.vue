@@ -40,8 +40,6 @@ export default {
                 travelData: JSON.stringify(travel),
               },
             });
-          } else {
-            console.log(`No travel found with ID: ${travelId}`);
           }
         })
         .catch((error) => {
@@ -68,6 +66,7 @@ export default {
           console.log(response.data);
           if (response.data.message) {
             alert(response.data.message);
+            this.fetchData();
           }
         })
         .catch((error) => {
