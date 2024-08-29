@@ -6,6 +6,7 @@ export default {
   },
 };
 </script>
+
 <template>
   <header>
     <section>
@@ -35,16 +36,22 @@ export default {
                 <font-awesome-icon :icon="['fas', 'bars']" />
               </button>
               <ul class="dropdown-menu">
-                <li>
-                  <RouterLink to="/login" class="dropdown-item"
-                    >Login</RouterLink
-                  >
-                </li>
-                <li>
-                  <RouterLink to="/registration" class="dropdown-item"
-                    >Registration</RouterLink
-                  >
-                </li>
+                <template v-if="name && email">
+                  <li>
+                    <div class="dropdown-item name-dropdown">Hi <strong>{{ name }}</strong>!</div>
+                  </li>
+                  <li>
+                    <div class="dropdown-item email-dropdown">{{ email }}</div>
+                  </li>
+                </template>
+                <template v-else>
+                  <li>
+                    <RouterLink to="/login" class="dropdown-item">Login</RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/registration" class="dropdown-item">Registration</RouterLink>
+                  </li>
+                </template>
               </ul>
             </div>
           </div>
@@ -79,6 +86,18 @@ header {
   display: flex;
   align-items: center;
   font-size: 60px;
+}
+
+.email-dropdown {
+  color: white !important;
+  font-size: 14px;
+  background-color: none !important;
+}
+
+.name-dropdown {
+  color: white !important;
+  font-size: 20px;
+  background-color: none !important;
 }
 
 .home-hover {
