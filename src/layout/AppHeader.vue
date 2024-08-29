@@ -6,35 +6,57 @@ export default {
   },
 };
 </script>
+
 <template>
   <header>
     <section>
       <div class="container header-container">
         <div class="row align-items-center justify-content-between">
-          <div class="col-9 logos">
+          <RouterLink to="/" class="col-9 logos home-hover">
             <div class="logo-circle">
-              <RouterLink to="/" class="dropdown-item">
+              <div class="dropdown-item">
                 <img src="/public/logo1.png" alt="" class="logo-img" />
-              </RouterLink>
+              </div>
             </div>
-            <div class="logo-text ms-4">
+            <div class="logo-text logo-text-b ms-4">
               <img src="/public/logo3.png" alt="" />
             </div>
-          </div>
+            <div class="logo-text logo-text-w ms-4">
+              <img src="/public/logo3-w.png" alt="" />
+            </div>
+          </RouterLink>
           <div class="col-auto">
-            <!-- Il menu fa casino. Andrebbe fatto custom su js. Poi lo faro' -->
             <div class="dropdown">
               <button class="btn btn-transparent dropdown-toggle custom-dropdown-toggle me-5" type="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 <font-awesome-icon :icon="['fas', 'bars']" />
               </button>
               <ul class="dropdown-menu">
+<<<<<<< HEAD
                 <li>
                   <RouterLink to="/login" class="dropdown-item">Login</RouterLink>
                 </li>
                 <li>
                   <RouterLink to="/registration" class="dropdown-item">Registration</RouterLink>
                 </li>
+=======
+                <template v-if="name && email">
+                  <li>
+                    <div class="dropdown-item name-dropdown">Hi <strong>{{ name }}</strong>!</div>
+                  </li>
+                  <li>
+                    <div class="dropdown-item email-dropdown">{{ email }}</div>
+                  </li>
+                </template>
+                <template v-else>
+                  <li>
+                    <RouterLink to="/login" class="dropdown-item">Login</RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/registration" class="dropdown-item">Registration</RouterLink>
+                  </li>
+                </template>
+>>>>>>> fix-header
               </ul>
             </div>
           </div>
@@ -45,6 +67,11 @@ export default {
 </template>
 
 <style scoped>
+
+header {
+  background-color: var(--brand-color);
+}
+
 .header-container {
   padding-top: 15px;
   padding-bottom: 15px;
@@ -66,6 +93,43 @@ export default {
   font-size: 60px;
 }
 
+.email-dropdown {
+  color: white !important;
+  font-size: 14px;
+  background-color: none !important;
+}
+
+.name-dropdown {
+  color: white !important;
+  font-size: 20px;
+  background-color: none !important;
+}
+
+.home-hover {
+  position: relative;
+}
+
+.logo-text {
+  position: absolute;
+  left: 120px;
+}
+
+.logo-text-w {
+  transition: 0.3s;
+}
+
+.home-hover:hover .logo-text-w {
+  opacity: 0;
+}
+
+.logo-text-b {
+  display: none;
+}
+
+.home-hover:hover .logo-text-b {
+  display: block;
+}
+
 /* Questo e' l'effettivo dropdown */
 .dropdown {
   position: relative;
@@ -73,17 +137,28 @@ export default {
 }
 
 .dropdown-menu {
-  position: absolute;
-  /* Position the dropdown menu absolutely */
-  top: 100%;
-  /* Position it directly below the button */
-  right: 0;
-  /* Align it to the right side of the button */
+  position: fixed !important;
+  top: 70px !important;
+  left: auto !important;
   background-color: white;
-  z-index: 1000;
-  /* Ensure it appears above other content */
+  z-index: 1000 !important;
   min-width: 200px;
-  /* Optional: Adjust based on your design */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--brand-color);
+  text-align: center;
+  border-radius: 20px !important;
+  padding: 20px;
+}
+
+.dropdown-menu li {
+  width: 180px !important;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-item {
+  border-radius: 10px !important;
+  width: 180px !important;
 }
 
 /* Gestisce il layout delle immagini del logo */
@@ -114,14 +189,11 @@ export default {
   width: 100%;
   height: auto;
   /* Questo non e' necessarissimo */
-  border-radius: 50%;
   object-fit: contain;
-  max-width: 100%;
-  max-height: 100%;
 }
 
 .logo-circle img {
-  height: 100%;
+  height: 80px;
 }
 
 /* Previenel'overflow orizzontale */
