@@ -59,7 +59,7 @@ const fetchTravel = async function (event, context) {
 
     //Adesso recuperiamo anche tutti i giorni dalla collection days che hanno a travel_id l'id della query
     const daysCollection = database.collection("days");
-    const days = await daysCollection.find({ "travel_id": queryId }).toArray();
+    const days = await daysCollection.find({ "travel_id": new ObjectId(queryId) }).toArray();
 
     // Log successful database connection and query
     console.log("Successfully connected to database and retrieved results");
