@@ -1,8 +1,14 @@
 <script>
 export default {
-  props: ["name", "email"],
-  data() {
-    return {};
+  props: {
+    name: {
+      type: String,
+      default: "",
+    },
+    email: {
+      type: String,
+      default: "",
+    },
   },
 };
 </script>

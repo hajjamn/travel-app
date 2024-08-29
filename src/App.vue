@@ -26,6 +26,7 @@ export default {
         // Print response in the console
         console.log(response);
         this.userLog.username = response.data.user.name;
+        this.userLog.email = response.data.user.email;
         if (response.data.message === "Login successful") {
           // Navigate to another page, e.g., a dashboard
           // this.$router.push("/dashboard");
