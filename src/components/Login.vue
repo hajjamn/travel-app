@@ -35,18 +35,6 @@ export default {
       });
   },
   methods: {
-    async logout() {
-      try {
-        await this.$axios.post("/logout");
-        this.userLog.username = "";
-        location.reload();
-      } catch (error) {
-        console.error(
-          "Error during logout:",
-          error.response ? error.response.data : error.message
-        );
-      }
-    },
     query(dataUser) {
       this.$axios
         .get("login", {
@@ -62,7 +50,8 @@ export default {
                 // Print response in the console
                 // console.log(response);
                 this.userLog.username = response.data.user.name;
-                location.reload();
+                window.location.href = "/";
+
                 if (response.data.message === "Login successful") {
                   // Navigate to another page, e.g., a dashboard
                   // this.$router.push("/dashboard");
@@ -106,24 +95,27 @@ export default {
         <form @submit.prevent="query(user)">
           <div class="col-auto text-center mt-3">
             <label for="email" class="d-block">Your email</label>
-            <input type="email" id="email" v-model="user.email" placeholder="your@email.com" /><br />
+            <input
+              type="email"
+              id="email"
+              v-model="user.email"
+              placeholder="your@email.com"
+            /><br />
           </div>
           <div class="col-auto text-center mt-3">
             <label for="password" class="d-block">Password</label>
-            <input type="password" id="password" v-model="user.password" /><br />
+            <input
+              type="password"
+              id="password"
+              v-model="user.password"
+            /><br />
           </div>
           <div class="col-auto text-center mt-4">
             <input class="btn btn-brand" type="submit" value="Submit" />
           </div>
         </form>
-
       </div>
     </div>
-  </div>
-  <div v-else>
-    <span class="fs-4">You are logged in as {{ userLog.username }}!</span>
-    <br />
-    <button class="btn btn-brand mt-3" @click="logout">Logout</button>
   </div>
 </template>
 

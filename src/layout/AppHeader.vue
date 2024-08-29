@@ -14,7 +14,7 @@ export default {
     async logout() {
       try {
         await this.$axios.post("/logout");
-        location.reload();
+        window.location.href = "/login";
       } catch (error) {
         console.error(
           "Error during logout:",
