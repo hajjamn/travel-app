@@ -27,14 +27,21 @@ export default {
           </RouterLink>
           <div class="col-auto">
             <div class="dropdown">
-              <button class="btn btn-transparent dropdown-toggle custom-dropdown-toggle me-5" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
+              <button
+                class="btn btn-transparent dropdown-toggle custom-dropdown-toggle me-5"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 <font-awesome-icon :icon="['fas', 'bars']" />
               </button>
               <ul class="dropdown-menu">
                 <template v-if="name && email">
                   <li>
-                    <div class="dropdown-item name-dropdown">Hi <strong>{{ name }}</strong>!</div>
+                    <div class="dropdown-item name-dropdown">
+                      Hi <strong>{{ name }}</strong
+                      >!
+                    </div>
                   </li>
                   <li>
                     <div class="dropdown-item email-dropdown">{{ email }}</div>
@@ -42,10 +49,14 @@ export default {
                 </template>
                 <template v-else>
                   <li>
-                    <RouterLink to="/login" class="dropdown-item">Login</RouterLink>
+                    <RouterLink to="/login" class="dropdown-item"
+                      >Login</RouterLink
+                    >
                   </li>
                   <li>
-                    <RouterLink to="/registration" class="dropdown-item">Registration</RouterLink>
+                    <RouterLink to="/registration" class="dropdown-item"
+                      >Registration</RouterLink
+                    >
                   </li>
                 </template>
               </ul>
@@ -58,7 +69,6 @@ export default {
 </template>
 
 <style scoped>
-
 header {
   background-color: var(--brand-color);
 }
