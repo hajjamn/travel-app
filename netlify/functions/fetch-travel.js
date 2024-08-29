@@ -58,6 +58,9 @@ const fetchTravel = async function (event, context) {
     const daysCollection = database.collection("days");
     const days = await daysCollection.find({ "travel_id": new ObjectId(queryId) }).toArray();
 
+    const stopsCollection = database.collection("stops");
+    const stops = await stopsCollection.find({"travel_id" : new ObjectId(queryId)}).toArray();
+
     // Log successful database connection and query
     console.log("Successfully connected to database and retrieved results");
 
@@ -67,6 +70,7 @@ const fetchTravel = async function (event, context) {
         data: {
           travel,
           days,
+          stops,
         },
       }),
     };

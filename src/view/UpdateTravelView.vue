@@ -38,6 +38,9 @@
     </form>
 
     <h1>Inizio: {{ travel.destination || "No destination available" }}</h1>
+    <div>
+      <h2 v-for="stop in stops" :key="stop._id">{{ stop.title }}</h2>
+    </div>
   </div>
   <div v-else>
     <h3>Travel is loading...</h3>
@@ -92,11 +95,13 @@ export default {
         console.log("Full Response:", response);  // Log the entire response
 
         if (response.status === 200 && response.data) {
-          const { travel, days } = response.data.data;
+          const { travel, days, stops } = response.data.data;
           this.travel = travel;
           this.days = days;
+          this.stops = stops;
 
           console.log("Fetched days:", this.days); // Debugging output
+          console.log("Fetched stops:", this.stops);
         } else {
           console.error("Unexpected response structure or status:", response);
         }
