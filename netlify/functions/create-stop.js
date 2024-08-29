@@ -37,24 +37,10 @@ const createStop = async function (event, context) {
       // Log the raw event body
       console.log("Raw event body:", event.body);
   
-      // Parse the body and handle any errors
-      // let body;
-      // try {
-      //   body = JSON.parse(event.body || '{}');
-      // } catch (parseError) {
-      //   console.error("Error parsing JSON:", parseError);
-      //   return {
-      //     statusCode: 400,
-      //     body: JSON.stringify({ message: "Invalid JSON format" }),
-      //   };
-      // }
   
       const { travel_id, day_id,  title, latitude, longitude } = JSON.parse(event.body);
       console.log("travel_id:", travel_id);
       console.log("day_id:", day_id);
-      // const title = event.queryStringParameters.title;
-      // const latitude = event.queryStringParameters.latitude;
-      // const longitude = event.queryStringParameters.longitude;
   
       //Validate required parameters
       if (!day_id || !travel_id || !title || latitude === undefined || longitude === undefined) {
@@ -84,6 +70,30 @@ const createStop = async function (event, context) {
       // Insert the new stop into the "stops" collection
       const insertedStop = await database.collection("stops").insertOne(newStop);
       console.log("Stop inserted:", insertedStop);
+
+      const getStopsForTravel = async (event) => {
+        try {
+          const database = (await clientPromise).db("travel-app");
+      
+          const stops = await database
+            .collection("stops")
+            .find({ travel_id: new ObjectId(travel_id) })
+            .toArray();
+      
+          return {
+            statusCode: 200,
+            body: JSON.stringify({ stops }),
+          };
+        } catch (error) {
+          return {
+            statusCode: 500,
+            body: JSON.stringify({
+              message: "Error fetching stops",
+              error: error.toString(),
+            }),
+          };
+        }
+      };
   
       return {
         statusCode: 200,
@@ -105,4 +115,4 @@ const createStop = async function (event, context) {
   };
 
 // Export the handler with authentication
-export const handler = withAuth(createStop);
+export const handler = withAuth(createStop, getStopsForTravel);

@@ -52,6 +52,7 @@ export default {
     return {
       travel: null, // Holds travel data
       days: [], // Holds the list of days for the travel
+      stops: [],
       selectedDay: "", // Holds the ID of the selected day
       newStop: {
         title: "",
@@ -63,6 +64,10 @@ export default {
   created() {
     // Fetch travel and days together using the existing fetch-travel API
     this.fetchTravelAndDays();
+
+  },
+  mounted() {
+    this.fetchStops();
   },
   methods: {
     async fetchTravelAndDays() {
@@ -161,6 +166,15 @@ export default {
       const date = new Date(dateString);
       return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
     },
+    async fetchStops() {
+      try {
+        const response = await this.$axios.get(`http://localhost:8888/get-stop?travel_id=${this.travelId}`);
+        this.stops = response;
+        console.log(this.stops);
+      } catch (error) {
+        console.error('Error fetching stops:', error);
+      }
+    }
   },
 };
 </script>

@@ -38,10 +38,7 @@ const fetchTravel = async function (event, context) {
       throw new Error("Invalid ObjectId format.");
     }
 
-    // Ensure 'queryId' is a valid ObjectId
-    // const objectId = new ObjectId(queryId);
 
-    // const travel = await queryCollection.find({ _id: query }).toArray();
 
      // Retrieve and log the ID from query parameters
      const travelId = event.queryStringParameters.id;
