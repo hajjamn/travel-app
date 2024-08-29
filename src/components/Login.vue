@@ -35,6 +35,18 @@ export default {
       });
   },
   methods: {
+    async logout() {
+      try {
+        await this.$axios.post("/logout");
+        this.userLog.username = "";
+        // location.reload();
+      } catch (error) {
+        console.error(
+          "Error during logout:",
+          error.response ? error.response.data : error.message
+        );
+      }
+    },
     query(dataUser) {
       this.$axios
         .get("login", {
@@ -81,25 +93,26 @@ export default {
 };
 </script>
 <template>
-  <div class="container">
-    <div v-if="userLog.username === ''">
-      <h1>Login</h1>
-      <h2 v-if="showErrorAlert">ERRORE</h2>
-      <form @submit.prevent="query(user)">
-        <label for="email">Your email</label>
-        <input type="email" id="email" v-model="user.email" placeholder="your@email.com" /><br />
-        <label for="password">Password</label>
-        <input type="password" id="password" v-model="user.password" /><br />
-        <input type="submit" value="Submit" />
-      </form>
-    </div>
+  <div v-if="userLog.username === ''">
+    <h1>Login</h1>
+    <h2 v-if="showErrorAlert">ERRORE</h2>
+    <form @submit.prevent="query(user)">
+      <label for="email">Your email</label>
+      <input
+        type="email"
+        id="email"
+        v-model="user.email"
+        placeholder="your@email.com"
+      /><br />
+      <label for="password">Password</label>
+      <input type="password" id="password" v-model="user.password" /><br />
+      <input type="submit" value="Submit" />
+    </form>
   </div>
-  <!-- <div>
-    <button @click="query(user)">Test</button>
-  </div> -->
-  <div class="container text-center py-5">
-    <h1>Your username: {{ userLog.username }}</h1>
-    <button class="btn btn-brand mt-3">Logout da fare</button>
+  <div v-else>
+    <span class="fs-4">You are logged in as {{ userLog.username }}!</span>
+    <br />
+    <button class="btn btn-brand mt-3" @click="logout">Logout</button>
   </div>
 </template>
 
