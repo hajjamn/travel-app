@@ -17,6 +17,9 @@ export default {
         .get("/fetch-travel-app-data")
         .then((response) => {
           this.responseData = response.data.data;
+          // Reset dei viaggi
+          this.futureTravels = [];
+          this.pastTravels = [];
           // Separate travels into future and past
           // console.log(this.responseData.travels)
           this.responseData.travels.forEach((travel) => {
@@ -32,6 +35,10 @@ export default {
               this.pastTravels.push(travel);
             }
           });
+
+          // Ensure reactivity by reassigning the arrays
+          this.futureTravels = [...this.futureTravels];
+          this.pastTravels = [...this.pastTravels];
         })
         .catch((error) => {
           console.error("Error fetching travel data:", error);
@@ -105,20 +112,14 @@ export default {
   <main>
     <section class="h-100">
       <div class="container py-5 h-100">
-        <div
-          class="row align-items-center flex-column justify-content-between h-100"
-        >
+        <div class="row align-items-center flex-column justify-content-between h-100">
           <div class="col-auto text-center"></div>
           <!-- Future Travels Section -->
-          <div v-if="futureTravels" class="row text-center">
+          <div v-if="futureTravels.length > 0" class="row text-center">
             <h3 class="text-start align-self-start">
               Here is your planned vacay:
             </h3>
-            <div
-              class="col-12 mb-3"
-              v-for="travel in futureTravels"
-              :key="travel._id"
-            >
+            <div class="col-12 mb-3" v-for="travel in futureTravels" :key="travel._id">
               <div class="card my-card">
                 <div class="card-header my-card-header-future">
                   <h2>{{ travel.destination }}</h2>
@@ -146,8 +147,6 @@ export default {
               </div>
             </div>
           </div>
-          <!-- Questi dovrebbero uscire dall'ingranaggio -->
-
 
           <div class="col-auto m-auto text-center">
             <RouterLink to="/new-travel" class="btn btn-add fs-1 px-3">
@@ -156,14 +155,10 @@ export default {
           </div>
 
           <!-- Past Travels Section -->
-          <div v-if:="pastTravels">
+          <div v-if="pastTravels.length > 0" class="row text-center">
             <h3 class="text-start align-self-start">Your past vacays:</h3>
             <div class="row text-center">
-              <div
-                class="col-12 mb-3"
-                v-for="travel in pastTravels"
-                :key="travel._id"
-              >
+              <div class="col-12 mb-3" v-for="travel in pastTravels" :key="travel._id">
                 <div class="card my-card">
                   <div class="card-header my-card-header-past">
                     <h2>{{ travel.destination }}</h2>
