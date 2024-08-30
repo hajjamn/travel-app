@@ -115,7 +115,7 @@ export default {
               <div class="card my-card">
                 <div class="card-header my-card-header-future">
                   <h2>{{ travel.destination }}</h2>
-                  <font-awesome-icon class="fs-3" :icon="['fas', 'gear']" />
+                  <font-awesome-icon class="fs-3" :icon="['fas', 'gear']" @click="query('travels', travel._id)" />
                 </div>
                 <div class="card-body my-card-body text-start">
                   <p><em>{{ travel.start_date }} - {{ travel.end_date }}</em></p>
@@ -152,7 +152,7 @@ export default {
                 <div class="card my-card">
                   <div class="card-header my-card-header-past">
                     <h2>{{ travel.destination }}</h2>
-                    <font-awesome-icon class="fs-3" :icon="['fas', 'gear']" />
+                    <font-awesome-icon class="fs-3" :icon="['fas', 'gear']" @click="query('travels', travel._id)" />
                   </div>
                   <div class="card-body my-card-body text-start">
                     <p><em>{{ travel.start_date }} - {{ travel.end_date }}</em></p>
