@@ -140,7 +140,9 @@ export default {
             <div class="col-12 mb-3" v-for="travel in futureTravels" :key="travel._id">
               <div class="card my-card">
                 <div class="card-header my-card-header-future">
-                  <h2>{{ travel.destination }}</h2>
+                  <RouterLink :to="{ name: 'travelShow', params: { id: travel._id } }">
+                    <h2>{{ travel.destination }}</h2>
+                  </RouterLink>
                   <font-awesome-icon class="fs-3" :icon="['fas', 'gear']" @click="query('travels', travel._id)" />
                 </div>
                 <div class="card-body my-card-body text-start">
@@ -180,7 +182,9 @@ export default {
               <div class="col-12 mb-3" v-for="travel in pastTravels" :key="travel._id">
                 <div class="card my-card">
                   <div class="card-header my-card-header-past">
-                    <h2>{{ travel.destination }}</h2>
+                    <RouterLink :to="{ name: 'travelShow', params: { id: travel._id } }">
+                      <h2>{{ travel.destination }}</h2>
+                    </RouterLink>
                     <font-awesome-icon class="fs-3" :icon="['fas', 'gear']" @click="query('travels', travel._id)" />
                   </div>
                   <div class="card-body my-card-body text-start">

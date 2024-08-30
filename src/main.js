@@ -7,6 +7,7 @@ import UpdateTravelView from "./view/UpdateTravelView.vue";
 import UpdateStopView from "./view/UpdateStopView.vue";
 import Login from "./components/Login.vue";
 import TravelCreate from "./components/TravelCreate.vue";
+import TravelShow from "./components/TravelShow.vue"
 
 import axiosPlugin from "./plugins/axios";
 
@@ -38,6 +39,12 @@ const routes = [
     component: UpdateStopView,
     props: true, // Allow passing the route params as props
   },
+  {
+    path: '/travel/:id',
+    name: 'travelShow',
+    component: TravelShow,
+    props: true
+  }
 ];
 
 const router = createRouter({
