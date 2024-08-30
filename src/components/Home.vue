@@ -82,8 +82,8 @@ export default {
           console.log(response.data);
           if (response.data.message) {
             alert(response.data.message);
-            this.fetchData();
           }
+          this.fetchData();
         })
         .catch((error) => {
           console.error(
@@ -122,18 +122,19 @@ export default {
                   <p>Start in <strong>{{ travel.daysUntilStart }}</strong> days</p>
                   <p>Budget <strong>{{ travel.budget }}</strong></p>
                 </div>
-              </div>
-            </div>
-          </div>
-          <!-- Questi dovrebbero uscire dall'ingranaggio -->
-          <!-- <div class="card-footer">
+                <div class="card-footer">
                   <button class="btn btn-secondary" @click="query('travels', travel._id)">
                     Edit
                   </button>
                   <button class="btn btn-warning" @click="queryDelete('travels', travel._id)">
                     Delete
                   </button>
-                </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Questi dovrebbero uscire dall'ingranaggio -->
+
 
           <div class="col-auto m-auto text-center">
             <RouterLink to="/new-travel" class="btn btn-add fs-1 px-3">
@@ -157,6 +158,14 @@ export default {
                   <div class="card-body my-card-body text-start">
                     <p><em>{{ travel.start_date }} - {{ travel.end_date }}</em></p>
                     <p>Budget <strong>{{ travel.budget }}</strong></p>
+                  </div>
+                  <div class="card-footer">
+                    <button class="btn btn-secondary" @click="query('travels', travel._id)">
+                      Edit
+                    </button>
+                    <button class="btn btn-warning" @click="queryDelete('travels', travel._id)">
+                      Delete
+                    </button>
                   </div>
                 </div>
               </div>
