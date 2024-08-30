@@ -39,18 +39,18 @@ export default {
 
 
 <template>
-  <div>
+  <div class="container">
     <h1>{{ travel.destination }}</h1>
     <p><strong>Start Date:</strong> {{ travel.start_date }}</p>
     <p><strong>End Date:</strong> {{ travel.end_date }}</p>
     <p><strong>Budget:</strong> {{ travel.budget }}</p>
     <h2>Itinerary</h2>
     <ul>
-      <li v-for="day in days" :key="day._id">{{ day.name }} - {{ day.description }}</li>
+      <li v-for="(day, index) in days" :key="day._id">Day {{ index + 1 }} - {{ day.date }}</li>
     </ul>
     <h2>Stops</h2>
     <ul>
-      <li v-for="stop in stops" :key="stop._id">{{ stop.location }} - {{ stop.description }}</li>
+      <li v-for="(stop, index) in stops" :key="stop._id">Stop {{ index + 1 }} - {{ stop.title }}</li>
     </ul>
     <RouterLink :to="{ name: 'updateTravelView', params: { id: travel._id } }" class="btn btn-brand">
       Update Travel
