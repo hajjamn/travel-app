@@ -4,6 +4,7 @@ import App from "./App.vue";
 import Home from "./components/Home.vue";
 import Registration from "./components/Registration.vue";
 import UpdateTravelView from "./view/UpdateTravelView.vue";
+import UpdateStopView from "./view/UpdateStopView.vue";
 import Login from "./components/Login.vue";
 import TravelCreate from "./components/TravelCreate.vue";
 
@@ -30,6 +31,12 @@ const routes = [
     component: UpdateTravelView,
     name: "updateTravelView",
     props: (route) => ({ id: route.query.id }),
+  },
+  {
+    path: '/update-stop/:id',
+    name: 'updateStopView',
+    component: UpdateStopView,
+    props: true, // Allow passing the route params as props
   },
 ];
 

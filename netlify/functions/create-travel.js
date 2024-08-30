@@ -1,38 +1,30 @@
-//Importiamo MongoClient che ci permette di usare i driver per "parlare la stessa lingua" di MongoDB. ObjectId ci fa creare gli id
 import { MongoClient, ObjectId } from "mongodb";
 import { withAuth } from "./middleware";
-
-//Importiamo dotenv per usare le variabili nel file .env in ambiente di sviluppo
+import jwt from "jsonwebtoken"; // Import jwt using ES6 import
 import dotenv from "dotenv";
+
 dotenv.config();
 
-//Recuperiamo l'Uri supersegreto di MongoDB e la usiamo per fare la connessione
 const mongodbUri = process.env.MONGODB_URI;
 const mongoClient = new MongoClient(mongodbUri);
-
-//Connessione al server
 const clientPromise = mongoClient.connect();
+const jwtSecret = process.env.MY_SECRET;
 
-//Funzione per generare il l'id da assegnare al travel e poterlo poi assegnare al travel_id dei vari giorni
 const generateUniqueObjectId = async (database, collection) => {
   let uniqueId;
   let isUnique = false;
 
-  //Finche' il valore isUnique e' false
   while (!isUnique) {
-    uniqueId = new ObjectId(); //genera un nuovo oggetto
-
-    // Controlliamo se uniqueId esiste gia' nella collection travels
+    uniqueId = new ObjectId();
     const existingTravel = await database
       .collection(collection)
       .findOne({ _id: uniqueId });
 
     if (!existingTravel) {
-      isUnique = true; // Se non trova nulla, isUnique diventa true e il ciclo termina
+      isUnique = true;
     }
   }
 
-  //ritorniamo lo uniqueId
   return uniqueId;
 };
 
@@ -41,53 +33,84 @@ const createTravel = async function (event, context) {
   try {
     const database = (await clientPromise).db("travel-app");
 
-    //Estraiamo i parametri dall'evento. In netlify si fa cosi
     const destination = event.queryStringParameters.destination;
     const start_date = event.queryStringParameters.start_date;
     const end_date = event.queryStringParameters.end_date;
 
-    //Generiamo un id unico con la funzione creata sopra
+    //Extract the JWT token from cookies
+    const cookieHeader = event.headers.cookie;
+    if (!cookieHeader) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ message: "No cookies found in request" }),
+      };
+    }
+
+    const token = getTokenFromCookies(cookieHeader, "token");
+    if (!token) {
+      return {
+        statusCode: 401,
+        body: JSON.stringify({ message: "Authentication token not found" }),
+      };
+    }
+
+    //Verify JWT token and extract user email
+    let decoded;
+    try {
+      decoded = jwt.verify(token, jwtSecret); // Make sure jwtSecret is defined in .env
+    } catch (err) {
+      return {
+        statusCode: 401,
+        body: JSON.stringify({ message: "Invalid token" }),
+      };
+    }
+
+    const userEmail = decoded.email; // Extract email from the decoded JWT token
+
+    //Find the user in MongoDB by email
+    const user = await database
+      .collection("users")
+      .findOne({ email: userEmail });
+    if (!user) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ message: "User not found", user }),
+      };
+    }
+
+    // Generate a unique ID for the travel
     const travelId = await generateUniqueObjectId(database, "travels");
 
-    //Usiamo dati statici e l'ID generato per creare un travel
     const newTravel = {
       _id: travelId,
-      user_id: "user3",
+      user_id: user._id,
       destination: destination,
       start_date: start_date,
       end_date: end_date,
     };
 
-    //Inseriamo il viaggio nella collection
     const insertedTravel = await database
       .collection("travels")
       .insertOne(newTravel);
     console.log("Travel inserted: ", insertedTravel);
 
-    // Parsiamo start_date ed end_date cosi' invece di stringhe sono date
     const startDate = new Date(newTravel.start_date);
     const endDate = new Date(newTravel.end_date);
 
-    // Creiamo un bell'array per contenere i giorni che andremo a creare
     const days = [];
 
-    // Cicliamo ogni data da start date a End date. Sembra brutto ma e' leggibile
     for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-      //creiamo un ID per il giorno
       const dayId = await generateUniqueObjectId(database, "days");
 
-      // Creiamo un oggetto per questa data
       const newDay = {
         _id: dayId,
-        travel_id: travelId, // Usiamo l'ID generato prima
-        date: d, // Convertiamo al formato di data YYYY-MM-DD
+        travel_id: travelId,
+        date: new Date(d),
       };
 
-      // Pushiamo l-oggetto nell'array
       days.push(newDay);
     }
 
-    // Inseriamo tutti gli oggetti nell'array nella collection
     const insertedDays = await database.collection("days").insertMany(days);
     console.log("Days inserted: ", insertedDays);
 
@@ -101,7 +124,6 @@ const createTravel = async function (event, context) {
       }),
     };
   } catch (error) {
-    // Log the error details
     console.error("Error connecting to MongoDB:", error);
     return {
       statusCode: 500,
@@ -113,5 +135,16 @@ const createTravel = async function (event, context) {
     };
   }
 };
+
+function getTokenFromCookies(cookieHeader, tokenName) {
+  const cookies = cookieHeader.split("; ");
+  for (let cookie of cookies) {
+    const [name, value] = cookie.split("=");
+    if (name === tokenName) {
+      return value;
+    }
+  }
+  return null;
+}
 
 export const handler = withAuth(createTravel);
