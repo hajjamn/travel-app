@@ -31,7 +31,7 @@ export default {
     <section>
       <div class="container header-container">
         <div class="row align-items-center justify-content-between">
-          <RouterLink to="/" class="col-9 logos home-hover">
+          <RouterLink to="/" class="col-3 logos home-hover">
             <div class="logo-circle">
               <div class="dropdown-item">
                 <img src="/public/logo1.png" alt="" class="logo-img" />
@@ -57,13 +57,13 @@ export default {
               <ul class="dropdown-menu">
                 <template v-if="name && email">
                   <li>
-                    <div class="dropdown-item name-dropdown">
+                    <div class="name-dropdown">
                       Hi <strong>{{ name }}</strong
                       >!
                     </div>
                   </li>
                   <li>
-                    <div class="dropdown-item email-dropdown">{{ email }}</div>
+                    <div class="email-dropdown">{{ email }}</div>
                   </li>
                   <li>
                     <button class="btn btn-brand mt-3" @click="logout">
@@ -122,12 +122,16 @@ header {
   color: white !important;
   font-size: 14px;
   background-color: none !important;
+  text-decoration: none;
+  text-align: center;
 }
 
 .name-dropdown {
   color: white !important;
   font-size: 20px;
   background-color: none !important;
+  text-decoration: none;
+  text-align: center;
 }
 
 .home-hover {

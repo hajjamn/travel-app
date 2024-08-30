@@ -92,23 +92,27 @@ export default {
         <div class="col-auto text-center">
           <h2 v-if="showErrorAlert">ERRORE</h2>
         </div>
-        <form @submit.prevent="query(user)">
-          <div class="col-auto text-center mt-3">
-            <label for="email" class="d-block">Your email</label>
-            <input
-              type="email"
-              id="email"
-              v-model="user.email"
-              placeholder="your@email.com"
-            /><br />
-          </div>
-          <div class="col-auto text-center mt-3">
-            <label for="password" class="d-block">Password</label>
-            <input
-              type="password"
-              id="password"
-              v-model="user.password"
-            /><br />
+        <form @submit.prevent="query(user)" class="d-flex flex-column justify-content-center align-items-center">
+          <div class="log-form-container">
+            <div class="col-auto text-center">
+              <label for="email" class="d-block">Your email</label>
+              <input
+                type="email"
+                id="email"
+                class="input-bar"
+                v-model="user.email"
+                placeholder="your@email.com"
+              /><br />
+            </div>
+            <div class="col-auto text-center mt-3">
+              <label for="password" class="d-block">Password</label>
+              <input
+                type="password"
+                id="password"
+                class="input-bar"
+                v-model="user.password"
+              /><br />
+            </div>
           </div>
           <div class="col-auto text-center mt-4">
             <input class="btn btn-brand" type="submit" value="Submit" />
@@ -119,4 +123,21 @@ export default {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+.log-form-container {
+  background-color: var(--brand-color);
+  padding: 30px;
+  margin: 20px;
+  border-radius: 25px;
+  color: white;
+}
+
+.input-bar {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  margin-top: 3px;
+}
+
+</style>
