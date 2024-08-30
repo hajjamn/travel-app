@@ -46,7 +46,11 @@ export default {
     <p><strong>Budget:</strong> {{ travel.budget }}</p>
     <h2>Itinerary</h2>
     <ul>
-      <li v-for="(day, index) in days" :key="day._id">Day {{ index + 1 }} - {{ day.date }}</li>
+      <li v-for="(day, index) in days" :key="day._id">
+        Day {{ index + 1 }}: {{ new Date(day.date).toLocaleDateString('en-GB', {
+          day: '2-digit', month: '2-digit', year:
+            'numeric' }) }}
+      </li>
     </ul>
     <h2>Stops</h2>
     <ul>
