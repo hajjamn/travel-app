@@ -113,7 +113,25 @@ export default {
     <section class="h-100">
       <div class="container py-5 h-100">
         <div class="row align-items-center flex-column justify-content-between h-100">
-          <div class="col-auto text-center"></div>
+
+          <!-- No travels section -->
+          <div v-if="futureTravels.length == 0 && pastTravels.length == 0"
+            class="row text-center justify-content-center">
+            <h3 class="text-start alignt-self-start">You have no vacays planned</h3>
+            <div class="col-9 mt-3">
+              <div class="card logo-card p-3 align-items-center justify-content-center">
+                <div class="col-12">
+                  <h2>Start planning your vacay now!</h2>
+                </div>
+                <div class="col-9 align-self-center">
+                  <RouterLink to="/new-travel" class="logo-circle mx-auto my-3">
+                    <img src="/public/logo1.png" alt="" class="logo-img" />
+                  </RouterLink>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Future Travels Section -->
           <div v-if="futureTravels.length > 0" class="row text-center">
             <h3 class="text-start align-self-start">
@@ -148,7 +166,8 @@ export default {
             </div>
           </div>
 
-          <div class="col-auto m-auto text-center">
+          <!-- Add travel button -->
+          <div v-if="futureTravels.length != 0 || pastTravels.length != 0" class="col-auto m-auto text-center">
             <RouterLink to="/new-travel" class="btn btn-add fs-1 px-3">
               <font-awesome-icon :icon="['fas', 'plus']" />
             </RouterLink>
@@ -190,6 +209,42 @@ export default {
   </main>
 </template>
 
-<style>
-/* Add your styles here */
+<style scoped>
+.logos {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Assicura che le immagini del logo siano contenute */
+.logos img {
+  height: 105px;
+}
+
+/* Cerchio bianco intorno all'immagine del logo */
+.logo-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  height: 110px;
+  background-color: var(--brand-color);
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.logo-img {
+  width: 100%;
+  height: auto;
+  /* Questo non e' necessarissimo */
+  object-fit: contain;
+}
+
+.logo-circle img {
+  height: 80px;
+}
+
+.logo-card {
+  background-color: var(--neutral-gray);
+}
 </style>
