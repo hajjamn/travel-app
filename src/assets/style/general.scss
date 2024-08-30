@@ -79,6 +79,12 @@ btn-add:hover {
 
 .my-card-body {
   background-color: var(--neutral-gray);
+  /* border-bottom-left-radius: 20px !important;
+  border-bottom-right-radius: 20px !important; */
+}
+
+.my-card-footer {
+  background-color: var(--neutral-gray);
   border-bottom-left-radius: 20px !important;
   border-bottom-right-radius: 20px !important;
 }

@@ -21,6 +21,7 @@ export default {
         .then((response) => {
           //print response in console
           console.log(response.data);
+          this.$router.push('/');
         })
         .catch((error) => {
           //print error
