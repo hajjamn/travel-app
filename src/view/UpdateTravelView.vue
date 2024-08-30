@@ -39,7 +39,10 @@
 
     <h1>Inizio: {{ travel.destination || "No destination available" }}</h1>
     <div>
-      <h2 v-for="stop in stops" :key="stop._id">{{ stop.title }}</h2>
+      <div v-for="stop in stops" :key="stop._id">
+        <p>{{ stop.title }}</p>
+        <p @click="editStop(stop._id)">edit stop</p>
+      </div>
     </div>
   </div>
   <div v-else>
@@ -73,6 +76,46 @@ export default {
     this.fetchStops();
   },
   methods: {
+    editStop(stopId) {
+      this.$router.push({
+        name: "updateStopView",
+        params: { id: stopId }, // Pass the stop ID as a route parameter
+      });
+    },
+    query(collection, travelId) {
+      this.$axios
+        .get("/fetch-travel", {
+          params: {
+            collection: collection,
+            query: travelId,
+            id: travelId,
+          },
+        })
+        .then((response) => {
+          const stop = response.data;
+          if (stop) {
+            this.$router.push({
+              name: "updateStopView",
+              params: {
+                id: travelId,
+              },
+              query: {
+                travelData: JSON.stringify(stop),
+              },
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error querying stop:", error);
+          // Redirect only if there's no critical error
+          this.$router.push({
+            name: "updateStopView",
+            params: {
+              id: travelId,
+            },
+          });
+        });
+    },
     async fetchTravelAndDays() {
       try {
         // Fetch 'id' from route parameters
@@ -179,7 +222,7 @@ export default {
       } catch (error) {
         console.error('Error fetching stops:', error);
       }
-    }
+    },
   },
 };
 </script>
