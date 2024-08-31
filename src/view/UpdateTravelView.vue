@@ -1,7 +1,6 @@
 <template>
   <div class="container py-5">
 
-
     <h2>Update Travel Information</h2>
     <div v-if="travel">
       <form @submit.prevent="submitForm" method="POST">
@@ -72,10 +71,8 @@ export default {
   created() {
     // Fetch travel and days together using the existing fetch-travel API
     this.fetchTravelAndDays();
-
   },
   mounted() {
-    this.fetchStops();
   },
   methods: {
     editStop(stopId) {
@@ -83,40 +80,6 @@ export default {
         name: "updateStopView",
         params: { id: stopId }, // Pass the stop ID as a route parameter
       });
-    },
-    query(collection, travelId) {
-      this.$axios
-        .get("/fetch-travel", {
-          params: {
-            collection: collection,
-            query: travelId,
-            id: travelId,
-          },
-        })
-        .then((response) => {
-          const stop = response.data;
-          if (stop) {
-            this.$router.push({
-              name: "updateStopView",
-              params: {
-                id: travelId,
-              },
-              query: {
-                travelData: JSON.stringify(stop),
-              },
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("Error querying stop:", error);
-          // Redirect only if there's no critical error
-          this.$router.push({
-            name: "updateStopView",
-            params: {
-              id: travelId,
-            },
-          });
-        });
     },
     async fetchTravelAndDays() {
       try {
@@ -158,7 +121,6 @@ export default {
         }
       }
     },
-
     async createStop() {
       try {
         const stopData = {
@@ -177,17 +139,17 @@ export default {
           },
         });
 
-        console.log("Response from server:", response.data); // Log server response
+        console.log("Response from server:", response.data);
 
         if (response.data.message) {
           alert("Stop created successfully!");
+          this.fetchTravelAndDays();
         }
       } catch (error) {
         console.error("Error creating stop:", error);
         alert("Error creating stop.");
       }
     },
-
     async submitForm() {
       // Removed the 'travel' parameter
       try {
@@ -215,15 +177,6 @@ export default {
       // Format the date string into a human-readable format
       const date = new Date(dateString);
       return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
-    },
-    async fetchStops() {
-      try {
-        const response = await this.$axios.get(`http://localhost:8888/get-stop?travel_id=${this.travelId}`);
-        this.stops = response;
-        console.log(this.stops);
-      } catch (error) {
-        console.error('Error fetching stops:', error);
-      }
     },
   },
 };
