@@ -59,40 +59,6 @@ export default {
           console.error("Error fetching travel data:", error);
         });
     },
-    /* query(collection, travelId) {
-      this.$axios
-        .get("/fetch-travel", {
-          params: {
-            collection: collection,
-            query: travelId,
-            id: travelId,
-          },
-        })
-        .then((response) => {
-          const travel = response.data;
-          if (travel) {
-            this.$router.push({
-              name: "updateTravelView",
-              params: {
-                id: travelId,
-              },
-              query: {
-                travelData: JSON.stringify(travel),
-              },
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("Error querying travel:", error);
-          // Redirect only if there's no critical error
-          this.$router.push({
-            name: "updateTravelView",
-            params: {
-              id: travelId,
-            },
-          });
-        });
-    }, */
     queryDelete(collection, travelId) {
       this.$axios
         .get("/delete-travel", {
@@ -338,7 +304,6 @@ export default {
 };
 </script>
 
-
 <template>
   <main>
     <section class="h-100">
@@ -408,7 +373,7 @@ export default {
                       <em>{{ travel.start_date }} - {{ travel.end_date }}</em>
                     </p>
                     <p>
-                      Start in <strong>{{ travel.daysUntilStart }}</strong> days
+                      Day <strong>{{ (-1 * travel.daysUntilStart) + 1 }}</strong>
                     </p>
                     <p>
                       Budget <strong>{{ travel.budget }}</strong>
