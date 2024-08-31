@@ -11,7 +11,6 @@ export default {
     return {
       travel: {},
       days: [],
-      stops: [],
     };
   },
   created() {
@@ -21,13 +20,13 @@ export default {
     fetchTravelDetails() {
       this.$axios
         .get("/fetch-travel", {
-          params: { id: this.id, collection: 'travels' },
+          params: { id: this.id },
         })
         .then((response) => {
           const data = response.data.data;
           this.travel = data.travel;
           this.days = data.days;
-          this.stops = data.stops;
+          console.log('I giorni sono: ', this.days)
         })
         .catch((error) => {
           console.error("Error fetching travel details:", error);
@@ -47,15 +46,17 @@ export default {
     <h2>Itinerary</h2>
     <ul>
       <li v-for="(day, index) in days" :key="day._id">
-        Day {{ index + 1 }}: {{ new Date(day.date).toLocaleDateString('en-GB', {
-          day: '2-digit', month: '2-digit', year:
-            'numeric'
-        }) }}
+        <h3>
+          Day {{ index + 1 }}: {{ new Date(day.date).toLocaleDateString('en-GB', {
+            day: '2-digit', month: '2-digit', year:
+              'numeric'
+          }) }}
+        </h3>
+        <strong>Stops</strong>
+        <ol>
+          <li v-for="stop in day.stops">{{ stop.title }}</li>
+        </ol>
       </li>
-    </ul>
-    <h2>Stops</h2>
-    <ul>
-      <li v-for="(stop, index) in stops" :key="stop._id">Stop {{ index + 1 }} - {{ stop.title }}</li>
     </ul>
     <RouterLink :to="{ name: 'updateTravelView', params: { id: travel._id } }" class="btn btn-brand">
       Update Travel
