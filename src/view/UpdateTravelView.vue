@@ -1,52 +1,54 @@
 <template>
-  <h2>Update Travel Information</h2>
-  <div v-if="travel">
-    <form @submit.prevent="submitForm" method="POST">
-      <label for="destination">Destination:</label>
-      <input type="text" v-model="travel.destination" name="destination" id="destination" required /><br /><br />
+  <div class="container py-5">
 
-      <label for="start_date">Start Date:</label>
-      <input type="date" v-model="travel.start_date" name="start_date" id="start_date" required /><br /><br />
 
-      <label for="end_date">End Date:</label>
-      <input type="date" v-model="travel.end_date" name="end_date" id="end_date" required /><br /><br />
-      <button type="submit">Update</button>
-    </form>
+    <h2>Update Travel Information</h2>
+    <div v-if="travel">
+      <form @submit.prevent="submitForm" method="POST">
+        <label for="destination">Destination:</label>
+        <input type="text" v-model="travel.destination" name="destination" id="destination" required /><br /><br />
 
-    <!-- Stop Creation Form -->
-    <h3>Create a New Stop</h3>
-    <form @submit.prevent="createStop">
-      <label for="stop_title">Stop Title:</label>
-      <input v-model="newStop.title" type="text" id="stop_title" required /><br /><br />
+        <label for="start_date">Start Date:</label>
+        <input type="date" v-model="travel.start_date" name="start_date" id="start_date" required /><br /><br />
 
-      <!-- Day Selection Dropdown -->
-      <label for="day_select">Select Day:</label>
-      <select v-model="selectedDay" @change="onDaySelect" id="day_select" required>
-        <option v-for="day in days" :key="day._id" :value="day._id">
-          {{ formatDate(day.date) }}
-        </option>
-      </select><br /><br />
+        <label for="end_date">End Date:</label>
+        <input type="date" v-model="travel.end_date" name="end_date" id="end_date" required /><br /><br />
+        <button type="submit">Update</button>
+      </form>
 
-      <!-- Coordinates Inputs -->
-      <label for="latitude">Latitude:</label>
-      <input v-model="newStop.latitude" type="number" id="latitude" step="0.0001" required /><br /><br />
+      <!-- Stop Creation Form -->
+      <h3>Create a New Stop</h3>
+      <form @submit.prevent="createStop">
+        <label for="stop_title">Stop Title:</label>
+        <input v-model="newStop.title" type="text" id="stop_title" required /><br /><br />
 
-      <label for="longitude">Longitude:</label>
-      <input v-model="newStop.longitude" type="number" id="longitude" step="0.0001" required /><br /><br />
+        <!-- Day Selection Dropdown -->
+        <label for="day_select">Select Day:</label>
+        <select v-model="selectedDay" @change="onDaySelect" id="day_select" required>
+          <option v-for="day in days" :key="day._id" :value="day._id">
+            {{ formatDate(day.date) }}
+          </option>
+        </select><br /><br />
 
-      <button type="submit">Add Stop</button>
-    </form>
+        <!-- Coordinates Inputs -->
+        <label for="latitude">Latitude:</label>
+        <input v-model="newStop.latitude" type="number" id="latitude" step="0.0001" required /><br /><br />
 
-    <h1>Inizio: {{ travel.destination || "No destination available" }}</h1>
-    <div>
-      <div v-for="stop in stops" :key="stop._id">
-        <p>{{ stop.title }}</p>
-        <p @click="editStop(stop._id)">edit stop</p>
+        <label for="longitude">Longitude:</label>
+        <input v-model="newStop.longitude" type="number" id="longitude" step="0.0001" required /><br /><br />
+
+        <button type="submit">Add Stop</button>
+      </form>
+      <div>
+        <div v-for="stop in stops" :key="stop._id">
+          <p>{{ stop.title }}</p>
+          <p @click="editStop(stop._id)">edit stop</p>
+        </div>
       </div>
     </div>
-  </div>
-  <div v-else>
-    <h3>Travel is loading...</h3>
+    <div v-else>
+      <h3>Travel is loading...</h3>
+    </div>
   </div>
 </template>
 
@@ -199,8 +201,8 @@ export default {
         });
         alert("Travel updated successfully!");
 
-        // After the update, navigate back to Home and refetch the data
-        this.$router.push({ name: "home" });
+        // After the update, navigate back to the show and refetch the data
+        this.$router.push({ name: 'travelShow', params: { id: this.travel._id } });
 
         // Optionally, you could emit an event to refresh data on Home
         this.$emit("travel-updated");

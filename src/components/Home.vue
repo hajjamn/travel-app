@@ -9,6 +9,7 @@ export default {
       today: new Date(),
       futureTravels: [],
       pastTravels: [],
+      openTravelId: null
     };
   },
   methods: {
@@ -101,9 +102,13 @@ export default {
           );
         });
     },
+    toggleEditMode(travelId) {
+      // Apre i pulsanti su una card
+      this.openTravelId = this.openTravelId === travelId ? null : travelId;
+    }
   },
   created() {
-    this.fetchData(); // Only call once in created
+    this.fetchData();
   },
 };
 </script>
@@ -138,12 +143,26 @@ export default {
               Here is your planned vacay:
             </h3>
             <div class="col-12 mb-3" v-for="travel in futureTravels" :key="travel._id">
-              <div class="card my-card">
-                <div class="card-header my-card-header-future">
+              <div class="card my-card" :class="{ 'card-open': openTravelId === travel._id }">
+                <div class="card-header my-card-header-future d-flex align-items-center justify-content-between">
                   <RouterLink :to="{ name: 'travelShow', params: { id: travel._id } }">
-                    <h2>{{ travel.destination }}</h2>
+                    <h2 class="travel-title">{{ travel.destination }}</h2>
                   </RouterLink>
-                  <font-awesome-icon class="fs-3" :icon="['fas', 'gear']" @click="query('travels', travel._id)" />
+                  <div class="d-flex align-items-center position-relative">
+                    <font-awesome-icon class="fs-3 gear-icon" :icon="['fas', 'gear']"
+                      @click="toggleEditMode(travel._id)" />
+                    <!-- Options slider for Edit and Delete -->
+                    <transition name="slide-fade">
+                      <div v-if="openTravelId === travel._id" class="options-slider">
+                        <button class="btn btn-secondary me-2" @click="query('travels', travel._id)">
+                          Edit
+                        </button>
+                        <button class="btn btn-brand" @click="queryDelete('travels', travel._id)">
+                          Delete
+                        </button>
+                      </div>
+                    </transition>
+                  </div>
                 </div>
                 <div class="card-body my-card-body text-start">
                   <p>
@@ -155,14 +174,6 @@ export default {
                   <p>
                     Budget <strong>{{ travel.budget }}</strong>
                   </p>
-                </div>
-                <div class="card-footer">
-                  <button class="btn btn-secondary" @click="query('travels', travel._id)">
-                    Edit
-                  </button>
-                  <button class="btn btn-warning" @click="queryDelete('travels', travel._id)">
-                    Delete
-                  </button>
                 </div>
               </div>
             </div>
@@ -180,12 +191,26 @@ export default {
             <h3 class="text-start align-self-start">Your past vacays:</h3>
             <div class="row text-center">
               <div class="col-12 mb-3" v-for="travel in pastTravels" :key="travel._id">
-                <div class="card my-card">
-                  <div class="card-header my-card-header-past">
+                <div class="card my-card" :class="{ 'card-open': openTravelId === travel._id }">
+                  <div class="card-header my-card-header-past d-flex align-items-center justify-content-between">
                     <RouterLink :to="{ name: 'travelShow', params: { id: travel._id } }">
-                      <h2>{{ travel.destination }}</h2>
+                      <h2 class="travel-title">{{ travel.destination }}</h2>
                     </RouterLink>
-                    <font-awesome-icon class="fs-3" :icon="['fas', 'gear']" @click="query('travels', travel._id)" />
+                    <div class="d-flex align-items-center position-relative">
+                      <font-awesome-icon class="fs-3 gear-icon" :icon="['fas', 'gear']"
+                        @click="toggleEditMode(travel._id)" />
+                      <!-- Options slider for Edit and Delete -->
+                      <transition name="slide-fade">
+                        <div v-if="openTravelId === travel._id" class="options-slider">
+                          <button class="btn btn-secondary me-2" @click="query('travels', travel._id)">
+                            Edit
+                          </button>
+                          <button class="btn btn-brand" @click="queryDelete('travels', travel._id)">
+                            Delete
+                          </button>
+                        </div>
+                      </transition>
+                    </div>
                   </div>
                   <div class="card-body my-card-body text-start">
                     <p>
@@ -194,14 +219,6 @@ export default {
                     <p>
                       Budget <strong>{{ travel.budget }}</strong>
                     </p>
-                  </div>
-                  <div class="card-footer">
-                    <button class="btn btn-secondary" @click="query('travels', travel._id)">
-                      Edit
-                    </button>
-                    <button class="btn btn-warning" @click="queryDelete('travels', travel._id)">
-                      Delete
-                    </button>
                   </div>
                 </div>
               </div>
@@ -214,18 +231,25 @@ export default {
 </template>
 
 <style scoped>
+.card-header .travel-title {
+  text-decoration: none !important;
+  color: white;
+}
+
+.card-header .travel-title:hover {
+  color: var(--brand-color);
+}
+
 .logos {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-/* Assicura che le immagini del logo siano contenute */
 .logos img {
   height: 105px;
 }
 
-/* Cerchio bianco intorno all'immagine del logo */
 .logo-circle {
   display: flex;
   justify-content: center;
@@ -240,7 +264,6 @@ export default {
 .logo-img {
   width: 100%;
   height: auto;
-  /* Questo non e' necessarissimo */
   object-fit: contain;
 }
 
@@ -250,5 +273,38 @@ export default {
 
 .logo-card {
   background-color: var(--neutral-gray);
+}
+
+/* Transition of options */
+
+.gear-icon {
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.card-open .gear-icon {
+  transform: translateX(-200%);
+}
+
+.options-slider {
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.card-open .options-slider {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
 }
 </style>
