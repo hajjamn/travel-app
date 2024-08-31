@@ -20,15 +20,14 @@ const fetchTravel = async function (event, context) {
     const database = (await clientPromise).db("travel-app");
 
     //Estraiamo i parametri dall'evento. In netlify si fa cosi
-    const collection = event.queryStringParameters.collection;
     const queryId = event.queryStringParameters.id;
 
-    if (!collection || !queryId) {
+    if (!queryId) {
       throw new Error("Missing collection or id parameter");
     }
 
     //Ci colleghiamo a quella collection
-    const queryCollection = database.collection(collection);
+    const queryCollection = database.collection('travels');
 
     // Check if queryId is a valid ObjectId
     let objectId;
@@ -38,17 +37,13 @@ const fetchTravel = async function (event, context) {
       throw new Error("Invalid ObjectId format.");
     }
 
+    console.log("Querying for travel ID:", queryId);
+
+    // Fetch the document with the provided ID
+    const travel = await queryCollection.findOne({ _id: objectId });
+    console.log("Fetched travel document:", travel);
 
 
-     // Retrieve and log the ID from query parameters
-     const travelId = event.queryStringParameters.id;
-     console.log("Querying for travel ID:", travelId);
- 
-     // Fetch the document with the provided ID
-     const travel = await queryCollection.findOne({ _id: objectId });
-     console.log("Fetched travel document:", travel);
-
-    
 
     if (!travel) {
       throw new Error("No travel record found with the provided ID.");
@@ -58,8 +53,15 @@ const fetchTravel = async function (event, context) {
     const daysCollection = database.collection("days");
     const days = await daysCollection.find({ "travel_id": new ObjectId(queryId) }).toArray();
 
+    //Adesso recuperiamo tutti gli stop per ogni giorno dell'array che abbiamo salvato
     const stopsCollection = database.collection("stops");
-    const stops = await stopsCollection.find({"travel_id" : new ObjectId(queryId)}).toArray();
+    for (let i = 0; i < days.length; i++) {
+      const day = days[i];
+      const stops = await stopsCollection.find({ 'day_id': new ObjectId(day._id) }).toArray();
+      day['stops'] = stops;
+      console.log(day)
+    }
+
 
     // Log successful database connection and query
     console.log("Successfully connected to database and retrieved results");
@@ -69,8 +71,7 @@ const fetchTravel = async function (event, context) {
       body: JSON.stringify({
         data: {
           travel,
-          days,
-          stops,
+          days
         },
       }),
     };
