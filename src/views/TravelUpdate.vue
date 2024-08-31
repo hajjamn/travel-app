@@ -24,7 +24,7 @@ export default {
   methods: {
     editStop(stopId) {
       this.$router.push({
-        name: "updateStopView",
+        name: "stopUpdate",
         params: { id: stopId }, // Pass the stop ID as a route parameter
       });
     },
@@ -134,7 +134,7 @@ export default {
         alert("Travel updated successfully!");
 
         // After the update, navigate back to the show and refetch the data
-        this.$router.push({ name: 'travelShow', params: { id: this.travel._id } });
+        this.$router.push({ name: 'travelRead', params: { id: this.travel._id } });
 
         // Optionally, you could emit an event to refresh data on Home
         this.$emit("travel-updated");

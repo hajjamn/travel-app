@@ -53,7 +53,7 @@ export default {
       <h2>Itinerary</h2>
       <ul>
         <li class="day-list-item" v-for="(day, index) in days" :key="day._id">
-          <RouterLink :to="{ name: 'travelDayView', params: { id: travel._id, dayNumber: index + 1 } }">
+          <RouterLink :to="{ name: 'dayRead', params: { id: travel._id, dayNumber: index + 1 } }">
             <h3 class="day-title">
               Day {{ index + 1 }}: {{ new Date(day.date).toLocaleDateString('en-GB', {
       day: '2-digit', month: '2-digit',
@@ -68,7 +68,7 @@ export default {
         </li>
       </ul>
 
-      <RouterLink :to="{ name: 'updateTravelView', params: { id: travel._id } }" class="btn btn-brand">
+      <RouterLink :to="{ name: 'travelUpdate', params: { id: travel._id } }" class="btn btn-brand">
         Update Travel
       </RouterLink>
     </div>
