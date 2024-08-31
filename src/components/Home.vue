@@ -370,7 +370,7 @@ export default {
                   </div>
                   <div class="card-body my-card-body text-start">
                     <p>
-                      <em>{{ travel.start_date }} - {{ travel.end_date }}</em>
+                      <em>From <strong>{{ travel.start_date }}</strong> to <strong>{{ travel.end_date }}</strong></em>
                     </p>
                     <p>
                       Day <strong>{{ (-1 * travel.daysUntilStart) + 1 }}</strong>
@@ -414,7 +414,7 @@ export default {
                 </div>
                 <div class="card-body my-card-body text-start">
                   <p>
-                    <em>{{ travel.start_date }} - {{ travel.end_date }}</em>
+                    <em>From <strong>{{ travel.start_date }}</strong> to <strong>{{ travel.end_date }}</strong></em>
                   </p>
                   <p>
                     Start in <strong>{{ travel.daysUntilStart }}</strong> days
@@ -464,7 +464,7 @@ export default {
                   </div>
                   <div class="card-body my-card-body text-start">
                     <p>
-                      <em>{{ travel.start_date }} - {{ travel.end_date }}</em>
+                      <em>From <strong>{{ travel.start_date }}</strong> to <strong>{{ travel.end_date }}</strong></em>
                     </p>
                     <p>
                       Budget <strong>{{ travel.budget }}</strong>
