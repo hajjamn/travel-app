@@ -1,55 +1,3 @@
-<template>
-  <h2>Update Travel Information</h2>
-  <div v-if="travel">
-    <form @submit.prevent="submitForm" method="POST">
-      <label for="destination">Destination:</label>
-      <input type="text" v-model="travel.destination" name="destination" id="destination" required /><br /><br />
-
-      <label for="start_date">Start Date:</label>
-      <input type="date" v-model="travel.start_date" name="start_date" id="start_date" required /><br /><br />
-
-      <label for="end_date">End Date:</label>
-      <input type="date" v-model="travel.end_date" name="end_date" id="end_date" required /><br /><br />
-      <button type="submit">Update</button>
-    </form>
-
-    <!-- Stop Creation Form -->
-    <h3>Create a New Stop</h3>
-    <form @submit.prevent="createStop">
-      <label for="stop_title">Stop Title:</label>
-      <input v-model="newStop.title" type="text" id="stop_title" required /><br /><br />
-
-      <!-- Day Selection Dropdown -->
-      <label for="day_select">Select Day:</label>
-      <select v-model="selectedDay" @change="onDaySelect" id="day_select" required>
-        <option v-for="day in days" :key="day._id" :value="day._id">
-          {{ formatDate(day.date) }}
-        </option>
-      </select><br /><br />
-
-      <!-- Coordinates Inputs -->
-      <label for="latitude">Latitude:</label>
-      <input v-model="newStop.latitude" type="number" id="latitude" step="0.0001" required /><br /><br />
-
-      <label for="longitude">Longitude:</label>
-      <input v-model="newStop.longitude" type="number" id="longitude" step="0.0001" required /><br /><br />
-
-      <button type="submit">Add Stop</button>
-    </form>
-
-    <h1>Inizio: {{ travel.destination || "No destination available" }}</h1>
-    <div>
-      <div v-for="stop in stops" :key="stop._id">
-        <p>{{ stop.title }}</p>
-        <p @click="editStop(stop._id)">edit stop</p>
-      </div>
-    </div>
-  </div>
-  <div v-else>
-    <h3>Travel is loading...</h3>
-  </div>
-</template>
-
 <script>
 export default {
   name: "UpdateTravel",
@@ -70,10 +18,8 @@ export default {
   created() {
     // Fetch travel and days together using the existing fetch-travel API
     this.fetchTravelAndDays();
-
   },
   mounted() {
-    this.fetchStops();
   },
   methods: {
     editStop(stopId) {
@@ -82,38 +28,27 @@ export default {
         params: { id: stopId }, // Pass the stop ID as a route parameter
       });
     },
-    query(collection, travelId) {
+    deleteStop(collection, stopId) {
       this.$axios
-        .get("/fetch-travel", {
+        .get("/delete-stop", {
           params: {
             collection: collection,
-            query: travelId,
-            id: travelId,
+            query: stopId,
+            id: stopId, // Ensure this matches what your server expects
           },
         })
         .then((response) => {
-          const stop = response.data;
-          if (stop) {
-            this.$router.push({
-              name: "updateStopView",
-              params: {
-                id: travelId,
-              },
-              query: {
-                travelData: JSON.stringify(stop),
-              },
-            });
+          // console.log(response.data);
+          if (response.data.message) {
+            alert(response.data.message);
           }
+          this.fetchTravelAndDays();
         })
         .catch((error) => {
-          console.error("Error querying stop:", error);
-          // Redirect only if there's no critical error
-          this.$router.push({
-            name: "updateStopView",
-            params: {
-              id: travelId,
-            },
-          });
+          console.error(
+            "Error deleting travel:",
+            error.response ? error.response.data : error.message
+          );
         });
     },
     async fetchTravelAndDays() {
@@ -156,7 +91,6 @@ export default {
         }
       }
     },
-
     async createStop() {
       try {
         const stopData = {
@@ -175,17 +109,17 @@ export default {
           },
         });
 
-        console.log("Response from server:", response.data); // Log server response
+        console.log("Response from server:", response.data);
 
         if (response.data.message) {
           alert("Stop created successfully!");
+          this.fetchTravelAndDays();
         }
       } catch (error) {
         console.error("Error creating stop:", error);
         alert("Error creating stop.");
       }
     },
-
     async submitForm() {
       // Removed the 'travel' parameter
       try {
@@ -199,8 +133,8 @@ export default {
         });
         alert("Travel updated successfully!");
 
-        // After the update, navigate back to Home and refetch the data
-        this.$router.push({ name: "home" });
+        // After the update, navigate back to the show and refetch the data
+        this.$router.push({ name: 'travelShow', params: { id: this.travel._id } });
 
         // Optionally, you could emit an event to refresh data on Home
         this.$emit("travel-updated");
@@ -214,15 +148,61 @@ export default {
       const date = new Date(dateString);
       return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
     },
-    async fetchStops() {
-      try {
-        const response = await this.$axios.get(`http://localhost:8888/get-stop?travel_id=${this.travelId}`);
-        this.stops = response;
-        console.log(this.stops);
-      } catch (error) {
-        console.error('Error fetching stops:', error);
-      }
-    },
   },
 };
 </script>
+
+<template>
+  <div class="container py-5">
+    <h2>Update Travel Information</h2>
+    <div v-if="travel">
+      <form @submit.prevent="submitForm" method="POST">
+        <label for="destination">Destination:</label>
+        <input type="text" v-model="travel.destination" name="destination" id="destination" required /><br /><br />
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" v-model="travel.start_date" name="start_date" id="start_date" required /><br /><br />
+
+        <label for="end_date">End Date:</label>
+        <input type="date" v-model="travel.end_date" name="end_date" id="end_date" required /><br /><br />
+        <button type="submit">Update</button>
+      </form>
+
+      <!-- Stop Creation Form -->
+      <h3>Create a New Stop</h3>
+      <form @submit.prevent="createStop">
+        <label for="stop_title">Stop Title:</label>
+        <input v-model="newStop.title" type="text" id="stop_title" required /><br /><br />
+
+        <!-- Day Selection Dropdown -->
+        <label for="day_select">Select Day:</label>
+        <select v-model="selectedDay" @change="onDaySelect" id="day_select" required>
+          <option v-for="day in days" :key="day._id" :value="day._id">
+            {{ formatDate(day.date) }}
+          </option>
+        </select><br /><br />
+
+        <!-- Coordinates Inputs -->
+        <label for="latitude">Latitude:</label>
+        <input v-model="newStop.latitude" type="number" id="latitude" step="0.0001" required /><br /><br />
+
+        <label for="longitude">Longitude:</label>
+        <input v-model="newStop.longitude" type="number" id="longitude" step="0.0001" required /><br /><br />
+
+        <button type="submit">Add Stop</button>
+      </form>
+      <div>
+        <div v-for="stop in stops" :key="stop._id">
+          <strong>{{ stop.title }}</strong>
+          <button class="btn btn-secondary" @click="editStop(stop._id)">edit stop</button>
+          <button class="btn btn-brand" @click="deleteStop('stops', stop._id)">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <h3>Travel is loading...</h3>
+    </div>
+  </div>
+</template>

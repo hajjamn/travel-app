@@ -55,8 +55,7 @@ btn-add:hover {
   border: none !important;
 }
 
-.my-card-header-future {
-  background-color: #2D2D2D !important;
+.my-card-header {
   color: white !important;
   border-top-left-radius: 20px !important;
   border-top-right-radius: 20px !important;
@@ -66,21 +65,22 @@ btn-add:hover {
   align-items: center;
 }
 
+.my-card-header-future {
+  background-color: #2D2D2D !important;
+}
+
 .my-card-header-past {
   background-color: #9D9D9D !important;
-  color: white;
-  border-top-left-radius: 20px !important;
-  border-top-right-radius: 20px !important;
-  border: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+}
+
+.my-card-header-current {
+  background-color: var(--brand-color) !important;
 }
 
 .my-card-body {
   background-color: var(--neutral-gray);
-  /* border-bottom-left-radius: 20px !important;
-  border-bottom-right-radius: 20px !important; */
+  border-bottom-left-radius: 20px !important;
+  border-bottom-right-radius: 20px !important;
 }
 
 .my-card-footer {

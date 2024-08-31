@@ -39,7 +39,7 @@ export default {
 
 
 <template>
-  <div class="container">
+  <div class="container py-5">
     <h1>{{ travel.destination }}</h1>
     <p><strong>Start Date:</strong> {{ travel.start_date }}</p>
     <p><strong>End Date:</strong> {{ travel.end_date }}</p>
@@ -49,7 +49,8 @@ export default {
       <li v-for="(day, index) in days" :key="day._id">
         Day {{ index + 1 }}: {{ new Date(day.date).toLocaleDateString('en-GB', {
           day: '2-digit', month: '2-digit', year:
-            'numeric' }) }}
+            'numeric'
+        }) }}
       </li>
     </ul>
     <h2>Stops</h2>
