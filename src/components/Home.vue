@@ -9,6 +9,7 @@ export default {
       today: new Date(),
       futureTravels: [],
       pastTravels: [],
+      currentTravels: [], // New array for current travels
       openTravelId: null
     };
   },
@@ -18,19 +19,24 @@ export default {
         .get("/fetch-travel-app-data")
         .then((response) => {
           this.responseData = response.data.data;
-          // Reset dei viaggi
+          // Reset arrays
           this.futureTravels = [];
           this.pastTravels = [];
-          // Separate travels into future and past
-          // console.log(this.responseData.travels)
+          this.currentTravels = []; // Reset current travels
+
+          // Separate travels into future, past, and current
           this.responseData.travels.forEach((travel) => {
             const startDate = new Date(travel.start_date);
-            travel.daysUntilStart = Math.ceil(
-              (startDate - this.today) / (1000 * 60 * 60 * 24)
-            );
+            const endDate = new Date(travel.end_date);
 
-            // Classify the travel based on its start date
-            if (startDate >= this.today) {
+            // Determine if the travel is current
+            const isCurrent = this.today >= startDate && this.today <= endDate;
+            travel.daysUntilStart = Math.ceil((startDate - this.today) / (1000 * 60 * 60 * 24));
+
+            if (isCurrent) {
+              console.log("Current Travel Identified:", travel);
+              this.currentTravels.push(travel);
+            } else if (startDate >= this.today) {
               this.futureTravels.push(travel);
             } else {
               this.pastTravels.push(travel);
@@ -40,6 +46,7 @@ export default {
           // Ensure reactivity by reassigning the arrays
           this.futureTravels = [...this.futureTravels];
           this.pastTravels = [...this.pastTravels];
+          this.currentTravels = [...this.currentTravels];
         })
         .catch((error) => {
           console.error("Error fetching travel data:", error);
@@ -89,7 +96,6 @@ export default {
           },
         })
         .then((response) => {
-          // console.log(response.data);
           if (response.data.message) {
             alert(response.data.message);
           }
@@ -103,7 +109,7 @@ export default {
         });
     },
     toggleEditMode(travelId) {
-      // Apre i pulsanti su una card
+      // Toggle open travel ID
       this.openTravelId = this.openTravelId === travelId ? null : travelId;
     }
   },
@@ -113,6 +119,7 @@ export default {
 };
 </script>
 
+
 <template>
   <main>
     <section class="h-100">
@@ -120,7 +127,7 @@ export default {
         <div class="row align-items-center flex-column justify-content-between h-100">
 
           <!-- No travels section -->
-          <div v-if="futureTravels.length == 0 && pastTravels.length == 0"
+          <div v-if="futureTravels.length == 0 && pastTravels.length == 0 && currentTravels.length == 0"
             class="row text-center justify-content-center">
             <h3 class="text-start alignt-self-start">You have no vacays planned</h3>
             <div class="col-9 mt-3">
@@ -137,6 +144,49 @@ export default {
             </div>
           </div>
 
+          <!-- Current Travels Section -->
+          <div v-if="currentTravels.length > 0" class="row text-center">
+            <h3 class="text-start align-self-start">Current Travels:</h3>
+            <div class="row text-center">
+              <div class="col-12 mb-3" v-for="travel in currentTravels" :key="travel._id">
+                <div class="card my-card" :class="{ 'card-open': openTravelId === travel._id }">
+                  <div
+                    class="card-header my-card-header my-card-header-current d-flex align-items-center justify-content-between">
+                    <RouterLink :to="{ name: 'travelShow', params: { id: travel._id } }">
+                      <h2 class="travel-title">{{ travel.destination }}</h2>
+                    </RouterLink>
+                    <div class="d-flex align-items-center position-relative">
+                      <font-awesome-icon class="fs-3 gear-icon" :icon="['fas', 'gear']"
+                        @click="toggleEditMode(travel._id)" />
+                      <!-- Options slider for Edit and Delete -->
+                      <transition name="slide-fade">
+                        <div v-if="openTravelId === travel._id" class="options-slider">
+                          <button class="btn btn-secondary me-2" @click="query('travels', travel._id)">
+                            Edit
+                          </button>
+                          <button class="btn btn-brand" @click="queryDelete('travels', travel._id)">
+                            Delete
+                          </button>
+                        </div>
+                      </transition>
+                    </div>
+                  </div>
+                  <div class="card-body my-card-body text-start">
+                    <p>
+                      <em>{{ travel.start_date }} - {{ travel.end_date }}</em>
+                    </p>
+                    <p>
+                      Start in <strong>{{ travel.daysUntilStart }}</strong> days
+                    </p>
+                    <p>
+                      Budget <strong>{{ travel.budget }}</strong>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Future Travels Section -->
           <div v-if="futureTravels.length > 0" class="row text-center">
             <h3 class="text-start align-self-start">
@@ -144,7 +194,8 @@ export default {
             </h3>
             <div class="col-12 mb-3" v-for="travel in futureTravels" :key="travel._id">
               <div class="card my-card" :class="{ 'card-open': openTravelId === travel._id }">
-                <div class="card-header my-card-header-future d-flex align-items-center justify-content-between">
+                <div
+                  class="card-header my-card-header my-card-header-future d-flex align-items-center justify-content-between">
                   <RouterLink :to="{ name: 'travelShow', params: { id: travel._id } }">
                     <h2 class="travel-title">{{ travel.destination }}</h2>
                   </RouterLink>
@@ -180,7 +231,8 @@ export default {
           </div>
 
           <!-- Add travel button -->
-          <div v-if="futureTravels.length != 0 || pastTravels.length != 0" class="col-auto m-auto text-center">
+          <div v-if="futureTravels.length != 0 || pastTravels.length != 0 || currentTravels.length != 0"
+            class="col-auto m-auto text-center">
             <RouterLink to="/new-travel" class="btn btn-add fs-1 px-3">
               <font-awesome-icon :icon="['fas', 'plus']" />
             </RouterLink>
@@ -192,7 +244,8 @@ export default {
             <div class="row text-center">
               <div class="col-12 mb-3" v-for="travel in pastTravels" :key="travel._id">
                 <div class="card my-card" :class="{ 'card-open': openTravelId === travel._id }">
-                  <div class="card-header my-card-header-past d-flex align-items-center justify-content-between">
+                  <div
+                    class="card-header my-card-header my-card-header-past d-flex align-items-center justify-content-between">
                     <RouterLink :to="{ name: 'travelShow', params: { id: travel._id } }">
                       <h2 class="travel-title">{{ travel.destination }}</h2>
                     </RouterLink>
