@@ -38,33 +38,46 @@ export default {
 
 <template>
   <div class="container py-5">
-    <h1>{{ travel.destination }}</h1>
-    <p><strong>Start Date:</strong> {{ travel.start_date }}</p>
-    <p><strong>End Date:</strong> {{ travel.end_date }}</p>
-    <p><strong>Budget:</strong> {{ travel.budget }}</p>
-    <h2>Itinerary</h2>
-    <ul>
-      <li class="day-list-item" v-for="(day, index) in days" :key="day._id">
-        <RouterLink :to="{ name: 'travelDayView', params: { id: travel._id, dayNumber: index + 1 } }">
-          <h3 class="day-title">
-            Day {{ index + 1 }}: {{ new Date(day.date).toLocaleDateString('en-GB', {
-      day: '2-digit', month: '2-digit', year:
-        'numeric'
+    <div v-if="travel">
+      <h1>{{ travel.destination }}</h1>
+      <p><strong>Start Date:</strong> {{ new Date(travel.start_date).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit', year: 'numeric'
+    }) }}</p>
+      <p><strong>End Date:</strong> {{ new Date(travel.end_date).toLocaleDateString('en-GB', {
+      day: '2-digit', month:
+        '2-digit', year: 'numeric'
+    }) }}</p>
+      <p><strong>Budget:</strong> {{ travel.budget }}</p>
+
+      <h2>Itinerary</h2>
+      <ul>
+        <li class="day-list-item" v-for="(day, index) in days" :key="day._id">
+          <RouterLink :to="{ name: 'travelDayView', params: { id: travel._id, dayNumber: index + 1 } }">
+            <h3 class="day-title">
+              Day {{ index + 1 }}: {{ new Date(day.date).toLocaleDateString('en-GB', {
+      day: '2-digit', month: '2-digit',
+      year: 'numeric'
     }) }}
-          </h3>
-        </RouterLink>
-        <strong>Stops</strong>
-        <ol>
-          <li v-for="stop in day.stops">{{ stop.title }}</li>
-        </ol>
-        <!-- Add RouterLink for the day details -->
+            </h3>
+          </RouterLink>
+          <strong>Stops</strong>
+          <ol>
+            <li v-for="stop in day.stops" :key="stop._id">{{ stop.title }}</li>
+          </ol>
+        </li>
+      </ul>
 
-
-      </li>
-    </ul>
-    <RouterLink :to="{ name: 'updateTravelView', params: { id: travel._id } }" class="btn btn-brand">
-      Update Travel
-    </RouterLink>
+      <RouterLink :to="{ name: 'updateTravelView', params: { id: travel._id } }" class="btn btn-brand">
+        Update Travel
+      </RouterLink>
+    </div>
+    <div v-else-if="error">
+      <p>{{ error }}</p>
+    </div>
+    <div v-else>
+      <p>Loading travel details...</p>
+    </div>
   </div>
 </template>
 

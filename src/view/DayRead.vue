@@ -38,14 +38,24 @@ export default {
 
 <template>
     <div class="container py-5">
-        <h1>Day {{ dayNumber }} </h1>
+        <h1>Day {{ dayNumber }}</h1>
         <!-- Display the  of the specific day -->
         <div v-if="day">
             <p><strong>Date:</strong> {{ new Date(day.date).toLocaleDateString() }}</p>
             <h2>Stops</h2>
             <ul>
-                <li v-for="stop in day.stops" :key="stop._id">{{ stop.title }}</li>
+                <li v-for="stop in day.stops" :key="stop._id">
+                    <RouterLink :to="{ name: 'stopView', params: { id: stop._id } }">
+                        <strong>{{ stop.title }}</strong>
+                    </RouterLink>
+                </li>
             </ul>
+        </div>
+        <div v-else-if="error">
+            <p>{{ error }}</p>
+        </div>
+        <div v-else>
+            <p>Loading day details...</p>
         </div>
     </div>
 </template>

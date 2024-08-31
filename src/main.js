@@ -9,6 +9,7 @@ import Login from "./components/Login.vue";
 import TravelCreate from "./components/TravelCreate.vue";
 import TravelShow from "./components/TravelShow.vue"
 import DayRead from "./view/DayRead.vue"
+import StopRead from "./view/StopRead.vue"
 
 import axiosPlugin from "./plugins/axios";
 
@@ -55,6 +56,14 @@ const routes = [
       dayNumber: Number(route.params.dayNumber) //Di base i parametri delle rotte si passano come stringhe quindi va convertita
     }),
   },
+  {
+    path: "/stop/:id",
+    name: "stopView",
+    component: StopRead,
+    props: route => ({
+      id: route.params.id,
+    }),
+  }
 ];
 
 const router = createRouter({
