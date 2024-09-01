@@ -1,27 +1,3 @@
-<template>
-    <h1>Update Stop Information</h1>
-
-    <div v-if="stop">
-        <form @submit.prevent="updateStop">
-            <label for="title">Stop Title:</label>
-            <input v-model="stop.title" type="text" id="title" required /><br /><br />
-
-            <label for="latitude">Latitude:</label>
-            <input v-model="stop.coordinates.latitude" type="number" step="0.0001" id="latitude" required /><br /><br />
-
-            <label for="longitude">Longitude:</label>
-            <input v-model="stop.coordinates.longitude" type="number" step="0.0001" id="longitude"
-                required /><br /><br />
-
-            <button type="submit">Update Stop</button>
-        </form>
-    </div>
-
-    <div v-else>
-        <p>Loading stop data...</p>
-    </div>
-</template>
-
 <script>
 export default {
     name: "UpdateStop",
@@ -84,3 +60,27 @@ export default {
     }
 }
 </script>
+
+<template>
+    <h1>Update Stop Information</h1>
+
+    <div v-if="stop">
+        <form @submit.prevent="updateStop">
+            <label for="title">Stop Title:</label>
+            <input v-model="stop.title" type="text" id="title" required /><br /><br />
+
+            <label for="latitude">Latitude:</label>
+            <input v-model="stop.coordinates.latitude" type="number" step="0.0001" id="latitude" required /><br /><br />
+
+            <label for="longitude">Longitude:</label>
+            <input v-model="stop.coordinates.longitude" type="number" step="0.0001" id="longitude"
+                required /><br /><br />
+
+            <button type="submit">Update Stop</button>
+        </form>
+    </div>
+
+    <div v-else>
+        <p>Loading stop data...</p>
+    </div>
+</template>

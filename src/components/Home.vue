@@ -21,7 +21,7 @@ export default {
     };
   },
   methods: {
-    fetchData() {
+    fetchAllTravels() {
       this.$axios
         .get("/fetch-all-travels")
         .then((response) => {
@@ -59,7 +59,41 @@ export default {
           console.error("Error fetching travel data:", error);
         });
     },
-    queryDelete(collection, travelId) {
+    updateTravel(collection, travelId) {
+      this.$axios
+        .get("/fetch-travel", {
+          params: {
+            collection: collection,
+            query: travelId,
+            id: travelId,
+          },
+        })
+        .then((response) => {
+          const travel = response.data;
+          if (travel) {
+            this.$router.push({
+              name: "travelUpdate",
+              params: {
+                id: travelId,
+              },
+              query: {
+                travelData: JSON.stringify(travel),
+              },
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error querying travel:", error);
+          // Redirect only if there's no critical error
+          this.$router.push({
+            name: "travelUpdate",
+            params: {
+              id: travelId,
+            },
+          });
+        });
+    },
+    deleteTravel(collection, travelId) {
       this.$axios
         .get("/delete-travel", {
           params: {
@@ -72,7 +106,7 @@ export default {
           if (response.data.message) {
             alert(response.data.message);
           }
-          this.fetchData();
+          this.fetchAllTravels();
         })
         .catch((error) => {
           console.error(
@@ -85,7 +119,6 @@ export default {
       // Toggle open travel ID
       this.openTravelId = this.openTravelId === travelId ? null : travelId;
     },
-
     initializeMap() {
       // tt è l'oggetto con tutte le info di tomtom,
       // tt.map ha le info della mappa
@@ -275,11 +308,9 @@ export default {
         this.isSettingMap = false;
       }
     },
-
-
   },
   created() {
-    this.fetchData();
+    this.fetchAllTravels();
   },
   mounted() {
     this.$nextTick(() => {
@@ -333,7 +364,7 @@ export default {
                   <h2>Start planning your vacay now!</h2>
                 </div>
                 <div class="col-9 align-self-center">
-                  <RouterLink to="/new-travel" class="logo-circle mx-auto my-3">
+                  <RouterLink :to="{ name: 'travelCreate' }" class="logo-circle mx-auto my-3">
                     <img src="/public/logo1.png" alt="" class="logo-img" />
                   </RouterLink>
                 </div>
@@ -349,7 +380,7 @@ export default {
                 <div class="card my-card" :class="{ 'card-open': openTravelId === travel._id }">
                   <div
                     class="card-header my-card-header my-card-header-current d-flex align-items-center justify-content-between">
-                    <RouterLink :to="{ name: 'travelShow', params: { id: travel._id } }">
+                    <RouterLink :to="{ name: 'travelRead', params: { id: travel._id } }">
                       <h2 class="travel-title">{{ travel.destination }}</h2>
                     </RouterLink>
                     <div class="d-flex align-items-center position-relative">
@@ -358,10 +389,10 @@ export default {
                       <!-- Options slider for Edit and Delete -->
                       <transition name="slide-fade">
                         <div v-if="openTravelId === travel._id" class="options-slider">
-                          <button class="btn btn-secondary me-2" @click="query('travels', travel._id)">
+                          <button class="btn btn-secondary me-2" @click="updateTravel('travels', travel._id)">
                             Edit
                           </button>
-                          <button class="btn btn-brand" @click="queryDelete('travels', travel._id)">
+                          <button class="btn btn-brand" @click="deleteTravel('travels', travel._id)">
                             Delete
                           </button>
                         </div>
@@ -370,7 +401,7 @@ export default {
                   </div>
                   <div class="card-body my-card-body text-start">
                     <p>
-                      <em>{{ travel.start_date }} - {{ travel.end_date }}</em>
+                      <em>From <strong>{{ travel.start_date }}</strong> to <strong>{{ travel.end_date }}</strong></em>
                     </p>
                     <p>
                       Day <strong>{{ (-1 * travel.daysUntilStart) + 1 }}</strong>
@@ -393,7 +424,7 @@ export default {
               <div class="card my-card" :class="{ 'card-open': openTravelId === travel._id }">
                 <div
                   class="card-header my-card-header my-card-header-future d-flex align-items-center justify-content-between">
-                  <RouterLink :to="{ name: 'travelShow', params: { id: travel._id } }">
+                  <RouterLink :to="{ name: 'travelRead', params: { id: travel._id } }">
                     <h2 class="travel-title">{{ travel.destination }}</h2>
                   </RouterLink>
                   <div class="d-flex align-items-center position-relative">
@@ -402,10 +433,10 @@ export default {
                     <!-- Options slider for Edit and Delete -->
                     <transition name="slide-fade">
                       <div v-if="openTravelId === travel._id" class="options-slider">
-                        <button class="btn btn-secondary me-2" @click="query('travels', travel._id)">
+                        <button class="btn btn-secondary me-2" @click="updateTravel('travels', travel._id)">
                           Edit
                         </button>
-                        <button class="btn btn-brand" @click="queryDelete('travels', travel._id)">
+                        <button class="btn btn-brand" @click="deleteTravel('travels', travel._id)">
                           Delete
                         </button>
                       </div>
@@ -414,7 +445,7 @@ export default {
                 </div>
                 <div class="card-body my-card-body text-start">
                   <p>
-                    <em>{{ travel.start_date }} - {{ travel.end_date }}</em>
+                    <em>From <strong>{{ travel.start_date }}</strong> to <strong>{{ travel.end_date }}</strong></em>
                   </p>
                   <p>
                     Start in <strong>{{ travel.daysUntilStart }}</strong> days
@@ -430,7 +461,7 @@ export default {
           <!-- Add travel button -->
           <div v-if="futureTravels.length != 0 || pastTravels.length != 0 || currentTravels.length != 0"
             class="col-auto m-auto text-center">
-            <RouterLink to="/new-travel" class="btn btn-add fs-1 px-3">
+            <RouterLink :to="{ name: 'travelCreate' }" class="btn btn-add fs-1 px-3">
               <font-awesome-icon :icon="['fas', 'plus']" />
             </RouterLink>
           </div>
@@ -443,7 +474,7 @@ export default {
                 <div class="card my-card" :class="{ 'card-open': openTravelId === travel._id }">
                   <div
                     class="card-header my-card-header my-card-header-past d-flex align-items-center justify-content-between">
-                    <RouterLink :to="{ name: 'travelShow', params: { id: travel._id } }">
+                    <RouterLink :to="{ name: 'travelRead', params: { id: travel._id } }">
                       <h2 class="travel-title">{{ travel.destination }}</h2>
                     </RouterLink>
                     <div class="d-flex align-items-center position-relative">
@@ -452,10 +483,10 @@ export default {
                       <!-- Options slider for Edit and Delete -->
                       <transition name="slide-fade">
                         <div v-if="openTravelId === travel._id" class="options-slider">
-                          <button class="btn btn-secondary me-2" @click="query('travels', travel._id)">
+                          <button class="btn btn-secondary me-2" @click="updateTravel('travels', travel._id)">
                             Edit
                           </button>
-                          <button class="btn btn-brand" @click="queryDelete('travels', travel._id)">
+                          <button class="btn btn-brand" @click="deleteTravel('travels', travel._id)">
                             Delete
                           </button>
                         </div>
@@ -464,7 +495,7 @@ export default {
                   </div>
                   <div class="card-body my-card-body text-start">
                     <p>
-                      <em>{{ travel.start_date }} - {{ travel.end_date }}</em>
+                      <em>From <strong>{{ travel.start_date }}</strong> to <strong>{{ travel.end_date }}</strong></em>
                     </p>
                     <p>
                       Budget <strong>{{ travel.budget }}</strong>
