@@ -5,31 +5,30 @@ export default {
       destination: '',
       start_date: '',
       end_date: '',
+      budget: '',  // Add a budget field
     };
   },
   methods: {
     createTravel() {
-      //collection in this case is travels and the query is the travel._id
       this.$axios
         .get("create-travel", {
           params: {
             destination: this.destination,
             start_date: this.start_date,
-            end_date: this.end_date
+            end_date: this.end_date,
+            budget: this.budget,  // Include budget in the request
           },
         })
         .then((response) => {
-          //print response in console
           console.log(response.data);
           this.$router.push('/');
         })
         .catch((error) => {
-          //print error
           console.log(error);
         });
     },
     test() {
-      console.log(this.destination, this.start_date, this.end_date)
+      console.log(this.destination, this.start_date, this.end_date, this.budget);
     }
   },
 };
@@ -43,12 +42,12 @@ export default {
       </div>
     </div>
     <div class="container py-5">
-      <form @submit.prevent>
+      <form @submit.prevent="createTravel">
         <div class="row align-items-center justify-content-center">
           <div class="col-12">
             <div class="card p-3">
-              <label for="destination">Name</label>
-              <input type="text" id="destination" v-model="destination" placeholder="Your vacay name">
+              <label for="destination">Destination</label>
+              <input type="text" id="destination" v-model="destination" placeholder="Your vacay destination">
             </div>
           </div>
           <div class="col-6 mt-3">
@@ -63,12 +62,17 @@ export default {
               <input type="date" id="end_date" v-model="end_date">
             </div>
           </div>
+          <div class="col-12 mt-3">
+            <div class="card p-3">
+              <label for="budget">Budget:</label>
+              <input type="number" id="budget" v-model="budget" placeholder="Your budget">
+            </div>
+          </div>
           <div class="col-auto mt-5">
-            <button class="btn btn-brand" @click="createTravel()">Confirm planning</button>
+            <button class="btn btn-brand" @click="createTravel">Confirm planning</button>
           </div>
         </div>
       </form>
-
     </div>
   </section>
 </template>

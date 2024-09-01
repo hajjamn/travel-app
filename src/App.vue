@@ -24,7 +24,7 @@ export default {
       .get("fetch-token")
       .then((response) => {
         // Print response in the console
-        console.log(response);
+        /* console.log(response); */
         this.userLog.username = response.data.user.name;
         this.userLog.email = response.data.user.email;
         if (response.data.message === "Login successful") {

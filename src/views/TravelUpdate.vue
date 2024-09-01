@@ -19,8 +19,6 @@ export default {
     // Fetch travel and days together using the existing fetch-travel API
     this.fetchTravelAndDays();
   },
-  mounted() {
-  },
   methods: {
     editStop(stopId) {
       this.$router.push({
@@ -38,7 +36,6 @@ export default {
           },
         })
         .then((response) => {
-          // console.log(response.data);
           if (response.data.message) {
             alert(response.data.message);
           }
@@ -53,12 +50,10 @@ export default {
     },
     async fetchTravelAndDays() {
       try {
-        // Fetch 'id' from route parameters
         const travelId = this.$route.params.id;
 
-        console.log("Fetching travel with ID:", travelId);  // Log the ID to ensure it's not undefined
+        console.log("Fetching travel with ID:", travelId);
 
-        // If ID is still undefined, something is wrong with the routing or URL
         if (!travelId) {
           throw new Error("No travel ID provided in the route");
         }
@@ -66,11 +61,11 @@ export default {
         const response = await this.$axios.get("/fetch-travel", {
           params: {
             collection: 'travels',
-            id: travelId,  // Use the travel ID from route params
+            id: travelId,
           },
         });
 
-        console.log("Full Response:", response);  // Log the entire response
+        console.log("Full Response:", response);
 
         if (response.status === 200 && response.data) {
           const { travel, days, stops } = response.data.data;
@@ -78,14 +73,14 @@ export default {
           this.days = days;
           this.stops = stops;
 
-          console.log("Fetched days:", this.days); // Debugging output
+          console.log("Fetched days:", this.days);
           console.log("Fetched stops:", this.stops);
         } else {
           console.error("Unexpected response structure or status:", response);
         }
       } catch (error) {
         if (error.response) {
-          console.error("Error Response:", error.response);  // Log the full error response
+          console.error("Error Response:", error.response);
         } else {
           console.error("Error without response:", error);
         }
@@ -121,7 +116,6 @@ export default {
       }
     },
     async submitForm() {
-      // Removed the 'travel' parameter
       try {
         console.log("Submitting travel data:", this.travel);
 
@@ -144,9 +138,8 @@ export default {
       }
     },
     formatDate(dateString) {
-      // Format the date string into a human-readable format
       const date = new Date(dateString);
-      return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+      return date.toISOString().split("T")[0];
     },
   },
 };
@@ -165,6 +158,10 @@ export default {
 
         <label for="end_date">End Date:</label>
         <input type="date" v-model="travel.end_date" name="end_date" id="end_date" required /><br /><br />
+
+        <label for="budget">Budget:</label>
+        <input type="number" v-model="travel.budget" name="budget" id="budget" step="0.01" required /><br /><br />
+
         <button type="submit">Update</button>
       </form>
 

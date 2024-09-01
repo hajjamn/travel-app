@@ -36,8 +36,8 @@ const createTravel = async function (event, context) {
     const destination = event.queryStringParameters.destination;
     const start_date = event.queryStringParameters.start_date;
     const end_date = event.queryStringParameters.end_date;
+    const budget = parseFloat(event.queryStringParameters.budget) || 0; // Convert budget to float and default to 0
 
-    //Extract the JWT token from cookies
     const cookieHeader = event.headers.cookie;
     if (!cookieHeader) {
       return {
@@ -54,10 +54,9 @@ const createTravel = async function (event, context) {
       };
     }
 
-    //Verify JWT token and extract user email
     let decoded;
     try {
-      decoded = jwt.verify(token, jwtSecret); // Make sure jwtSecret is defined in .env
+      decoded = jwt.verify(token, jwtSecret);
     } catch (err) {
       return {
         statusCode: 401,
@@ -65,9 +64,8 @@ const createTravel = async function (event, context) {
       };
     }
 
-    const userEmail = decoded.email; // Extract email from the decoded JWT token
+    const userEmail = decoded.email;
 
-    //Find the user in MongoDB by email
     const user = await database
       .collection("users")
       .findOne({ email: userEmail });
@@ -78,7 +76,6 @@ const createTravel = async function (event, context) {
       };
     }
 
-    // Generate a unique ID for the travel
     const travelId = await generateUniqueObjectId(database, "travels");
 
     const newTravel = {
@@ -87,6 +84,7 @@ const createTravel = async function (event, context) {
       destination: destination,
       start_date: start_date,
       end_date: end_date,
+      budget: budget, // Include budget in the travel document
     };
 
     const insertedTravel = await database
@@ -98,14 +96,16 @@ const createTravel = async function (event, context) {
     const endDate = new Date(newTravel.end_date);
 
     const days = [];
+    let index = 0;
 
     for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
       const dayId = await generateUniqueObjectId(database, "days");
-
+      index++;
       const newDay = {
         _id: dayId,
         travel_id: travelId,
         date: new Date(d),
+        day_number: index,
       };
 
       days.push(newDay);

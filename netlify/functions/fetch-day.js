@@ -28,7 +28,8 @@ const fetchDay = async function (event, context) {
         const daysCollection = database.collection("days");
 
         // Find the specific day by id
-        const day = await daysCollection.findOne({ travel_id: new ObjectId(dayId), });
+        const day = await daysCollection.findOne({ _id: new ObjectId(dayId) });
+        console.log(day);
 
         if (!day) {
             throw new Error("No day record found with the provided id.");
@@ -38,7 +39,7 @@ const fetchDay = async function (event, context) {
         const stopsCollection = database.collection("stops");
 
         // Fetch all stops related to this day
-        const stops = await stopsCollection.find({ day_id: new ObjectId(day._id) }).toArray();
+        const stops = await stopsCollection.find({ day_id: new ObjectId(dayId) }).toArray();
         day['stops'] = stops;
 
         // Log successful fetch

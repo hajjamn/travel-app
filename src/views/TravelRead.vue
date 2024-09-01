@@ -41,24 +41,25 @@ export default {
     <div v-if="travel">
       <h1>{{ travel.destination }}</h1>
       <p><strong>Start Date:</strong> {{ new Date(travel.start_date).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit', year: 'numeric'
-    }) }}</p>
+        day: '2-digit',
+        month: '2-digit', year: 'numeric'
+      }) }}</p>
       <p><strong>End Date:</strong> {{ new Date(travel.end_date).toLocaleDateString('en-GB', {
-      day: '2-digit', month:
-        '2-digit', year: 'numeric'
-    }) }}</p>
+        day: '2-digit', month:
+          '2-digit', year: 'numeric'
+      }) }}</p>
       <p><strong>Budget:</strong> {{ travel.budget }}</p>
 
       <h2>Itinerary</h2>
       <ul>
-        <li class="day-list-item" v-for="(day, index) in days" :key="day._id">
-          <RouterLink :to="{ name: 'dayRead', params: { id: travel._id, dayNumber: index + 1 } }">
+        <li class="day-list-item" v-for="(day) in days" :key="day._id">
+          <!-- Pass day._id as a prop to the dayRead route -->
+          <RouterLink
+            :to="{ name: 'dayRead', params: { id: day._id, dayNumber: day.day_number, travelId: travel._id } }">
             <h3 class="day-title">
-              Day {{ index + 1 }}: {{ new Date(day.date).toLocaleDateString('en-GB', {
-      day: '2-digit', month: '2-digit',
-      year: 'numeric'
-    }) }}
+              Day {{ day.day_number }}: {{ new Date(day.date).toLocaleDateString('en-GB', {
+                day: '2-digit', month:
+                  '2-digit', year: 'numeric' }) }}
             </h3>
           </RouterLink>
           <strong>Stops</strong>

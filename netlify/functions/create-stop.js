@@ -75,6 +75,7 @@ const createStop = async function (event, context) {
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
       },
+      isCompleted: false
     };
 
     // Insert the new stop into the "stops" collection

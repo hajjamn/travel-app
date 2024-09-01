@@ -37,9 +37,9 @@ const routes = [
   /* Travels */
   { path: "/travel/create", component: TravelCreate, name: "travelCreate" },
   { path: '/travel/:id', component: TravelRead, name: 'travelRead', props: true },
-  { path: "/travel/:id/update", component: TravelUpdate, name: "travelUpdate", props: (route) => ({ id: route.params.id }), },
+  { path: "/travel/:id/update", component: TravelUpdate, name: "travelUpdate", props: (route) => ({ id: route.params.id }) },
   /* Days */
-  { path: "/travel/:id/day/:dayNumber", component: DayRead, name: "dayRead", props: route => ({ id: route.params.id, dayNumber: Number(route.params.dayNumber) }) },
+  { path: '/travel/:id/day/:dayNumber', component: DayRead, name: 'dayRead', props: route => ({ id: route.params.id, travelId: route.params.id, dayNumber: Number(route.params.dayNumber) }) },
   /* Stops */
   { path: "/travel/:travelId/day/:dayNumber/stop/:id", component: StopRead, name: "stopRead", props: route => ({ id: route.params.id, travelId: route.params.travelId, dayNumber: Number(route.params.dayNumber) }) },
   { path: "/stop/:id/update", component: StopUpdate, name: "stopUpdate", props: true },
