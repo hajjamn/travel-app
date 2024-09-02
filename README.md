@@ -1,6 +1,11 @@
-# Welcome to our Travel-App
+# Welcome to Planavacay
 
-## How to get it running
+## Our application
+
+- Planavacay is an application that allows users to easily set up a trip by organizing it on our platform, we provide tools for the user to be able to have an easy access to the site and have his data stored, the user is going to have the possibility for a registration/login and with those will be able to create and see his planned vacations!
+  It is very easy to use and has and will be implemented with a lot of cool features, so stay tuned!
+
+## How to get it running locally
 
 - We have implemented a Netlify hosted server connected to MongoDB via serverless functions
 - To make it run in local you need to install the node package manager if node is already present in your device, in the CLI write "npm install", then you need the netlify CLI by writing "npm install netlify-cli -g"
