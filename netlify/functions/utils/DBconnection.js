@@ -1,10 +1,10 @@
-const { MongoClient } = require('mongodb');
+import { MongoClient } from 'mongodb';
 
 const mongodbUri = process.env.MONGODB_URI;
 
 let cachedDb = null;
 
-async function connectToDatabase() {
+export async function connectToDatabase() {
     if (cachedDb) {
         return cachedDb;
     }
@@ -15,5 +15,3 @@ async function connectToDatabase() {
     cachedDb = db;
     return db;
 }
-
-module.exports = { connectToDatabase };

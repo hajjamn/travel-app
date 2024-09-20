@@ -69,7 +69,7 @@ export default {
             </div>
           </div>
           <div class="col-auto mt-5">
-            <button class="btn btn-brand" @click="createTravel">Confirm planning</button>
+            <button class="btn btn-brand">Confirm planning</button>
           </div>
         </div>
       </form>

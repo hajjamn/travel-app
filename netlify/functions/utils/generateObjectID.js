@@ -1,6 +1,6 @@
-const { ObjectId } = require('mongodb');
+import { ObjectId } from 'mongodb';
 
-async function generateUniqueObjectId(database, collection) {
+export async function generateUniqueObjectId(database, collection) {
     let uniqueId;
     let isUnique = false;
 
@@ -14,5 +14,3 @@ async function generateUniqueObjectId(database, collection) {
 
     return uniqueId;
 }
-
-module.exports = { generateUniqueObjectId };
