@@ -1,42 +1,20 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { connectToDatabase } from "./utils/DBconnection";  // No need to pass URI anymore
+import { generateUniqueObjectId } from "./utils/generateObjectID";
 import { withAuth } from "./middleware";
 import jwt from "jsonwebtoken"; // Import jwt using ES6 import
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const mongodbUri = process.env.MONGODB_URI;
-const mongoClient = new MongoClient(mongodbUri);
-const clientPromise = mongoClient.connect();
 const jwtSecret = process.env.MY_SECRET;
-
-const generateUniqueObjectId = async (database, collection) => {
-  let uniqueId;
-  let isUnique = false;
-
-  while (!isUnique) {
-    uniqueId = new ObjectId();
-    const existingTravel = await database
-      .collection(collection)
-      .findOne({ _id: uniqueId });
-
-    if (!existingTravel) {
-      isUnique = true;
-    }
-  }
-
-  return uniqueId;
-};
 
 const createTravel = async function (event, context) {
   console.log("Function execution started");
   try {
-    const database = (await clientPromise).db("travel-app");
+    const database = await connectToDatabase(); // No need to pass MONGODB_URI
 
-    const destination = event.queryStringParameters.destination;
-    const start_date = event.queryStringParameters.start_date;
-    const end_date = event.queryStringParameters.end_date;
-    const budget = parseFloat(event.queryStringParameters.budget) || 0; // Convert budget to float and default to 0
+    const { destination, start_date, end_date } = event.queryStringParameters;
+    const budget = parseFloat(event.queryStringParameters.budget) || 0;
 
     const cookieHeader = event.headers.cookie;
     if (!cookieHeader) {
@@ -65,10 +43,8 @@ const createTravel = async function (event, context) {
     }
 
     const userEmail = decoded.email;
+    const user = await database.collection("users").findOne({ email: userEmail });
 
-    const user = await database
-      .collection("users")
-      .findOne({ email: userEmail });
     if (!user) {
       return {
         statusCode: 404,
@@ -81,15 +57,13 @@ const createTravel = async function (event, context) {
     const newTravel = {
       _id: travelId,
       user_id: user._id,
-      destination: destination,
-      start_date: start_date,
-      end_date: end_date,
-      budget: budget, // Include budget in the travel document
+      destination,
+      start_date,
+      end_date,
+      budget, // Include budget in the travel document
     };
 
-    const insertedTravel = await database
-      .collection("travels")
-      .insertOne(newTravel);
+    const insertedTravel = await database.collection("travels").insertOne(newTravel);
     console.log("Travel inserted: ", insertedTravel);
 
     const startDate = new Date(newTravel.start_date);
