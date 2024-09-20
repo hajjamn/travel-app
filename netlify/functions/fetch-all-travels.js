@@ -1,21 +1,40 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { connectToDatabase } from "./utils/DBconnection";
 import dotenv from "dotenv";
-import jwt from "jsonwebtoken"; // Import JWT for decoding the token
+import jwt from "jsonwebtoken";
 import { withAuth } from "./middleware";
 
 dotenv.config();
 
-const mongodbUri = process.env.MONGODB_URI;
-const mongoClient = new MongoClient(mongodbUri);
-const clientPromise = mongoClient.connect();
-const jwtSecret = process.env.MY_SECRET; // Ensure JWT_SECRET is defined in .env file
+const DEBUG = true;
 
-// Function to fetch travel data for authenticated user
+function logDebug(...args) {
+  if (DEBUG) {
+    console.log(...args);
+  }
+}
+
+function getTokenFromCookies(cookieHeader, tokenName) {
+  const cookies = cookieHeader.split("; ");
+  for (let cookie of cookies) {
+    const [name, value] = cookie.split("=");
+    if (name === tokenName) {
+      return value;
+    }
+  }
+  return null;
+}
+
+const jwtSecret = process.env.MY_SECRET;
+
 const fetchTravelData = async function (event, context) {
-  try {
-    const database = (await clientPromise).db("travel-app");
+  logDebug("Function execution started");
 
-    // Step 1: Extract JWT token from cookies
+  try {
+    logDebug("Connecting to MongoDB...");
+    const database = await connectToDatabase();
+    logDebug("Successfully connected to MongoDB");
+
+    logDebug("Extracting JWT token from cookies...");
     const cookieHeader = event.headers.cookie;
     if (!cookieHeader) {
       return {
@@ -31,11 +50,13 @@ const fetchTravelData = async function (event, context) {
         body: JSON.stringify({ message: "Authentication token not found" }),
       };
     }
+    logDebug("Token found and extracted successfully.");
 
-    // Step 2: Verify JWT token and extract user email
     let decoded;
     try {
-      decoded = jwt.verify(token, jwtSecret); // Decode and verify JWT token
+      logDebug("Verifying token...");
+      decoded = jwt.verify(token, jwtSecret);
+      logDebug("Token verified successfully");
     } catch (err) {
       return {
         statusCode: 401,
@@ -43,39 +64,32 @@ const fetchTravelData = async function (event, context) {
       };
     }
 
-    const userEmail = decoded.email; // Extract email from decoded token
+    const userEmail = decoded.email;
+    logDebug(`User email extracted from token: ${userEmail}`);
 
-    // Step 3: Find user in MongoDB by email to get user ID
     const usersCollection = database.collection("users");
     const user = await usersCollection.findOne({ email: userEmail });
 
     if (!user) {
+      logDebug(`User with email ${userEmail} not found.`);
       return {
         statusCode: 404,
         body: JSON.stringify({ message: "User not found" }),
       };
     }
 
-    // User ID found, proceed to fetch user-specific travel data
     const userId = user._id;
+    logDebug(`User found with ID: ${userId}`);
 
-    // Step 4: Fetch travels where user_id matches the found user ID
     const travelsCollection = database.collection("travels");
-    const daysCollection = database.collection("days");
-    const stopsCollection = database.collection("stops");
 
-    const travels = await travelsCollection.find({ user_id: userId }).toArray(); // Fetch travels for this user
-    const travelIds = travels.map((travel) => travel._id);
-
-    // Fetch days and stops linked to the user's travels
-    const days = await daysCollection
-      .find({ travel_id: { $in: travelIds } })
-      .toArray();
-    const stops = await stopsCollection
-      .find({ travel_id: { $in: travelIds } })
+    logDebug("Fetching travel documents for the user...");
+    const travels = await travelsCollection
+      .find({ user_id: userId })
       .toArray();
 
-    // Return response with travel data
+    logDebug(`Travels fetched successfully. Total travels: ${travels.length}`);
+
     return {
       statusCode: 200,
       headers: {
@@ -88,13 +102,11 @@ const fetchTravelData = async function (event, context) {
         },
         data: {
           travels,
-          days,
-          stops,
         },
       }),
     };
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
+    logDebug("Error occurred during MongoDB connection or data fetching:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({
@@ -106,17 +118,4 @@ const fetchTravelData = async function (event, context) {
   }
 };
 
-// Helper function to extract token from cookies
-function getTokenFromCookies(cookieHeader, tokenName) {
-  const cookies = cookieHeader.split("; ");
-  for (let cookie of cookies) {
-    const [name, value] = cookie.split("=");
-    if (name === tokenName) {
-      return value;
-    }
-  }
-  return null;
-}
-
-// Export the handler with authentication middleware
 export const handler = withAuth(fetchTravelData);
