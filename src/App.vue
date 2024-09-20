@@ -48,6 +48,7 @@ export default {
   <div id="app">
     <AppHeader :name="userLog.username" :email="userLog.email"></AppHeader>
     <AppContent></AppContent>
+    <AppFooter></AppFooter>
   </div>
 </template>
 

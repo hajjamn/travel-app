@@ -1,9 +1,6 @@
 <script>
 export default {
   name: "AppContent",
-  data() {
-    return {};
-  },
 };
 </script>
 
