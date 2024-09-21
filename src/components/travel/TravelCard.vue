@@ -47,7 +47,7 @@ export default {
 <template>
     <div class="card my-card" :class="{ 'card-open': isEditing, [cardTypeClass]: true }">
         <div class="card-header my-card-header d-flex align-items-center justify-content-between">
-            <RouterLink :to="{ name: 'travelRead', params: { id: travel._id } }">
+            <RouterLink :to="{ name: 'travelRead', params: { id: travel._id } }" class="travel-title">
                 <h2 class="travel-title">{{ travel.destination }}</h2>
             </RouterLink>
 
@@ -64,10 +64,8 @@ export default {
 
         <div class="card-body my-card-body text-start">
             <p><em>From <strong>{{ travel.start_date }}</strong> to <strong>{{ travel.end_date }}</strong></em></p>
-
             <p v-if="isCurrent">Day <strong>{{ currentDay }}</strong></p>
             <p v-if="isFuture">Start in <strong>{{ travel.daysUntilStart }}</strong> days</p>
-
             <p>Budget <strong>{{ travel.budget }}</strong></p>
         </div>
     </div>
@@ -78,15 +76,11 @@ export default {
     border: none !important;
     border-radius: 20px !important;
     overflow: hidden;
-    /* Ensures content stays within rounded edges */
     margin-bottom: 20px;
     position: relative;
-    /* Add relative positioning for the card */
     background-color: var(--neutral-gray);
-    /* Set the background for the entire card */
 }
 
-/* Card Header Styles */
 .my-card-header {
     padding: 10px;
     font-size: 16px;
@@ -94,13 +88,13 @@ export default {
     color: white !important;
     border-top-left-radius: 20px !important;
     border-top-right-radius: 20px !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: relative;
-    /* Add relative positioning */
     z-index: 1;
-    /* Ensure it stays above other elements */
 }
 
-/* Colors for different travel types */
 .my-card-header-current {
     background-color: var(--brand-color) !important;
 }
@@ -113,47 +107,43 @@ export default {
     background-color: var(--past-travel-color) !important;
 }
 
-/* Card Body Styling */
+.my-card .travel-title a {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
 .my-card-body {
     background-color: var(--neutral-gray);
     border-bottom-left-radius: 20px !important;
     border-bottom-right-radius: 20px !important;
     padding: 15px;
     z-index: 1;
-    /* Ensure it stays above other elements */
 }
 
-/* Gear Icon Transition */
 .gear-icon {
     transition: transform 0.3s ease-in-out;
     cursor: pointer;
+    z-index: 5;
 }
 
 .card-open .gear-icon {
-    transform: translateX(-200%);
+    transform: translateX(-100%);
 }
 
-/* Button Slider */
 .options-slider {
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     transform: translateX(100%);
-    /* Initially off-screen */
     opacity: 0;
-    position: absolute;
-    /* Absolute positioning to place the buttons correctly */
-    right: 0;
-    /* Align to the right */
-    z-index: 10;
-    /* Ensure the buttons appear above other elements */
+    display: flex;
+    gap: 10px;
+    z-index: 5;
 }
 
 .card-open .options-slider {
     transform: translateX(0);
-    /* Slide into view */
     opacity: 1;
 }
 
-/* Slide-fade transition classes */
 .slide-fade-enter-active,
 .slide-fade-leave-active {
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;

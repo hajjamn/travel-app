@@ -14,8 +14,12 @@ main {
 }
 
 a {
-  color: currentColor;
-  text-decoration: none;
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+a:hover {
+  text-decoration: none !important;
 }
 
 /* Buttons */
@@ -36,69 +40,4 @@ a {
 
 .btn-add:hover {
   color: var(--button-hover-color) !important;
-}
-
-/* Cards */
-.my-card {
-  border: none !important;
-}
-
-.my-card-header {
-  color: white !important;
-  border-top-left-radius: 20px !important;
-  border-top-right-radius: 20px !important;
-  border: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.my-card-header-future {
-  background-color: var(--neutral-dark-gray) !important;
-}
-
-.my-card-header-past {
-  background-color: var(--past-travel-color) !important;
-}
-
-.my-card-header-current {
-  background-color: var(--brand-color) !important;
-}
-
-.my-card-body {
-  background-color: var(--neutral-gray);
-  border-bottom-left-radius: 20px !important;
-  border-bottom-right-radius: 20px !important;
-}
-
-/* Transition for options */
-.gear-icon {
-  transition: transform 0.3s ease-in-out;
-  cursor: pointer;
-}
-
-.card-open .gear-icon {
-  transform: translateX(-200%);
-}
-
-.options-slider {
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-.card-open .options-slider {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-}
-
-.slide-fade-enter,
-.slide-fade-leave-to {
-  transform: translateX(100%);
-  opacity: 0;
 }

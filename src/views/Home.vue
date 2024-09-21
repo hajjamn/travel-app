@@ -111,10 +111,8 @@ export default {
           <!-- Current Travels Section -->
           <div v-if="currentTravels.length > 0" class="row text-center">
             <h3 class="text-start align-self-start">Current Travels:</h3>
-            <div class="row text-center">
-              <div class="col-12 mb-3" v-for="travel in currentTravels" :key="travel._id">
-                <TravelCard :travel="travel" cardType="current" @edit="updateTravel" @delete="deleteTravel" />
-              </div>
+            <div class="col-12 mb-3" v-for="travel in currentTravels" :key="travel._id">
+              <TravelCard :travel="travel" cardType="current" @edit="updateTravel" @delete="deleteTravel" />
             </div>
           </div>
 
@@ -126,6 +124,14 @@ export default {
             </div>
           </div>
 
+          <!-- Add travel button -->
+          <div v-if="futureTravels.length > 0 || pastTravels.length > 0 || currentTravels.length > 0"
+            class="col-auto m-auto text-center">
+            <RouterLink :to="{ name: 'travelCreate' }" class="btn btn-add fs-1 px-3">
+              <font-awesome-icon :icon="['fas', 'plus']" />
+            </RouterLink>
+          </div>
+
           <!-- Past Travels Section -->
           <div v-if="pastTravels.length > 0" class="row text-center">
             <h3 class="text-start align-self-start">Your past vacays:</h3>
@@ -134,13 +140,6 @@ export default {
             </div>
           </div>
 
-          <!-- Add travel button -->
-          <div v-if="futureTravels.length > 0 || pastTravels.length > 0 || currentTravels.length > 0"
-            class="col-auto m-auto text-center">
-            <RouterLink :to="{ name: 'travelCreate' }" class="btn btn-add fs-1 px-3">
-              <font-awesome-icon :icon="['fas', 'plus']" />
-            </RouterLink>
-          </div>
         </div>
       </div>
     </section>
@@ -165,12 +164,15 @@ export default {
   background-color: var(--neutral-gray);
 }
 
-/* Add button styles */
 .btn-add {
   color: var(--brand-color) !important;
   background-color: var(--neutral-gray) !important;
   border-radius: 50% !important;
   width: 60px;
   height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
 }
 </style>
